@@ -18,7 +18,7 @@ code="$dir/Day$dd.kt"
 session="session"
 
 if [[ ! -s "$code" ]]; then
-  cp "$template" "$code"
+  perl -p -e "s/class Day/class Day$dd/" "$template" > "$code"
   git add "$code"
 fi
 

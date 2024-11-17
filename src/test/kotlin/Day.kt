@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test
 class Day {
     private val sample = """""".trimIndent().lines()
 
+    private fun parse(input: List<String>) = input
+
     private fun one(input: List<String>): Int {
         return 0
     }
