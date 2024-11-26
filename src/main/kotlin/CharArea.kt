@@ -87,8 +87,8 @@ class CharArea(private val area: Array<CharArray>) {
         area.forEach { println(it) }
     }
 
-    fun png() {
-        showPng(this)
+    fun png(tiles: TILES = TILES.PATH) {
+        showPng(this, tiles)
     }
 
     fun rows() = sequence { yRange.forEach { y -> yield(area[y]) } }

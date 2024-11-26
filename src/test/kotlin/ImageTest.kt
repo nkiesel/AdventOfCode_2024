@@ -17,7 +17,8 @@ class ImageTest {
                 .L--J.L--J.
                 ...........
                 """
-            )
+            ),
+            TILES.PATH,
         )
     }
 
@@ -37,7 +38,8 @@ class ImageTest {
                 ....FJL-7.||.||||...
                 ....L---J.LJ.LJLJ...
                 """
-            )
+            ),
+            TILES.PATH,
         )
     }
 
@@ -57,7 +59,8 @@ class ImageTest {
                 L.L7LFJ|||||FJL7||LJ
                 L7JLJL-JLJLJL--JLJ.L
                 """
-            )
+            ),
+            TILES.PATH,
         )
     }
 
@@ -72,7 +75,8 @@ class ImageTest {
                 ..8.9.0..
                 .........
                 """
-            )
+            ),
+            TILES.DIGIT,
         )
     }
 }
