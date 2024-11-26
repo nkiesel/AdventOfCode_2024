@@ -4,9 +4,8 @@ class ImageTest {
 
     @Test
     fun `show sample2 from 2023 Day 10`() {
-        showPng(
-            CharArea(
-                """
+        CharArea(
+            """
                 ...........
                 .S-------7.
                 .|F-----7|.
@@ -17,16 +16,13 @@ class ImageTest {
                 .L--J.L--J.
                 ...........
                 """
-            ),
-            TILES.PATH,
-        )
+        ).png()
     }
 
     @Test
     fun `show sample3 from 2023 Day 10`() {
-        showPng(
-            CharArea(
-                """
+        CharArea(
+            """
                 .F----7F7F7F7F-7....
                 .|F--7||||||||FJ....
                 .||.FJ||||||||L7....
@@ -38,16 +34,13 @@ class ImageTest {
                 ....FJL-7.||.||||...
                 ....L---J.LJ.LJLJ...
                 """
-            ),
-            TILES.PATH,
-        )
+        ).png(TILES.PATH)
     }
 
     @Test
     fun `show sample4 from 2023 Day 10`() {
-        showPng(
-            CharArea(
-                """
+        CharArea(
+            """
                 FF7FSF7F7F7F7F7F---7
                 L|LJ||||||||||||F--J
                 FL-7LJLJ||||||LJL-77
@@ -59,24 +52,19 @@ class ImageTest {
                 L.L7LFJ|||||FJL7||LJ
                 L7JLJL-JLJLJL--JLJ.L
                 """
-            ),
-            TILES.PATH,
-        )
+        ).png(TILES.PATH)
     }
 
     @Test
     fun `show digits`() {
-        showPng(
-            CharArea(
-                """
+        CharArea(
+            """
                 .........
                 ..1.2.3..
                 .4.5.6.7.
                 ..8.9.0..
                 .........
                 """
-            ),
-            TILES.DIGIT,
-        )
+        ).png(TILES.DIGIT)
     }
 }

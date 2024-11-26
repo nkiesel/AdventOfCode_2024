@@ -404,7 +404,7 @@ fun showPng(area: CharArea, tiles: TILES) {
     ProcessBuilder(pngViewer, out.path).start().waitFor()
 }
 
-fun toPng(area: CharArea, tiles: TILES, output: File) {
+private fun toPng(area: CharArea, tiles: TILES, output: File) {
     val image = BufferedImage(
         (area.xRange.endInclusive + 1) * tileSize,
         (area.yRange.endInclusive + 1) * tileSize,
