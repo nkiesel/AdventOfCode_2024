@@ -24,7 +24,7 @@ tasks.test {
     maxHeapSize = "10g"
     testLogging.showStandardStreams = true
     filter {
-        setIncludePatterns("UtilKtTest", "GraphTest", "CharAreaTest", "Day0*", "Day1*", "Day2*")
+        setIncludePatterns("*Test", "Day*")
     }
 }
 

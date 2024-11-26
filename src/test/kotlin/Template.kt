@@ -1,7 +1,7 @@
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class Day {
+class Template {
     private val sample = """""".trimIndent().lines()
 
     private fun parse(input: List<String>) = input

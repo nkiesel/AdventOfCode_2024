@@ -13,12 +13,12 @@ d=$dd
 input="input/Day$dd.txt"
 url="https://adventofcode.com/2024/day/$d/input"
 dir="src/test/kotlin"
-template="$dir/Day.kt"
+template="$dir/Template.kt"
 code="$dir/Day$dd.kt"
 session="session"
 
 if [[ ! -s "$code" ]]; then
-  perl -p -e "s/class Day/class Day$dd/" "$template" > "$code"
+  sed -e "s/class Template/class Day$dd/" "$template" > "$code"
   git add "$code"
 fi
 
