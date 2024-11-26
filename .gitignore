@@ -2,5 +2,6 @@
 /.gradle/
 /out/
 /input/Day*.txt
+!/input/Day00.txt
 /.idea/
 session
