@@ -391,10 +391,18 @@ private fun toBufferedImage(char: Char, data: String): BufferedImage {
 }
 
 fun showPng(area: CharArea, tiles: TILES) {
-    val out = createTempFile().toFile()
+    val out = createTempFile(suffix = ".png").toFile()
     toPng(area, tiles, out)
-    ProcessBuilder("loupe", out.path).start().waitFor()
-    out.delete()
+    val pngViewer = System.getenv("PNG_VIEWER") ?: run {
+        val osName = System.getProperty("os.name")
+        when {
+            osName.startsWith("Linux") -> "loupe"
+            osName.startsWith("Mac") -> "open"
+            osName.startsWith("Windows") -> "explorer"
+            else -> "xdg-open"
+        }
+    }
+    ProcessBuilder(pngViewer, out.path).start().waitFor()
 }
 
 fun toPng(area: CharArea, tiles: TILES, output: File) {
