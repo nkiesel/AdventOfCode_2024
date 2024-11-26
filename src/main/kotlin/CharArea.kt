@@ -1,5 +1,3 @@
-import kotlin.io.path.createTempFile
-
 enum class Direction { N, S, E, W }
 
 data class Point(val x: Int, val y: Int) {
@@ -13,6 +11,9 @@ data class Point(val x: Int, val y: Int) {
     fun move(dx: Int, dy: Int) = Point(x + dx, y + dy)
 
     fun neighbors4() = listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1)
+        .map { (dx, dy) -> Point(x + dx, y + dy) }
+
+    fun neighbors8() = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
         .map { (dx, dy) -> Point(x + dx, y + dy) }
 }
 
@@ -72,19 +73,15 @@ class CharArea(private val area: Array<CharArray>) {
         return Point(x, y)
     }
 
-    fun filter(condition: (Point) -> Boolean) = sequence {
-        for (x in xRange) {
-            for (y in yRange) {
-                val p = Point(x, y)
-                if (condition(p))
-                    yield(p)
-            }
-        }
-    }
+    fun filter(condition: (Char) -> Boolean) = tiles().filter { p -> condition(get(p)) }
 
-    fun neighbors4(x: Int, y: Int): List<Point> = Point(x, y).neighbors4().filter { valid(it) }
+    fun neighbors4(x: Int, y: Int): List<Point> = neighbors4(Point(x, y))
 
     fun neighbors4(p: Point): List<Point> = p.neighbors4().filter { valid(it) }
+
+    fun neighbors8(p: Point): List<Point> = p.neighbors8().filter { valid(it) }
+
+    fun neighbors8(x: Int, y: Int): List<Point> = neighbors8(Point(x, y))
 
     fun show() {
         area.forEach { println(it) }
@@ -100,7 +97,7 @@ class CharArea(private val area: Array<CharArray>) {
 
     fun row(i: Int) = area[i]
 
-    fun column(i: Int) = yRange.map { get(i, it) }
+    fun column(i: Int) = yRange.map { get(i, it) }.toCharArray()
 
     fun substring(y: Int, startIndex: Int, endIndex: Int) = area[y].concatToString(startIndex, endIndex)
 
