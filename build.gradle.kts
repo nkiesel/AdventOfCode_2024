@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.internal.config.LanguageFeature
+
 plugins {
     kotlin("jvm") version "2.1.0"
     alias(libs.plugins.versions)
@@ -30,4 +32,11 @@ tasks.test {
 
 kotlin {
     jvmToolchain(21)
+    sourceSets.all {
+        languageSettings {
+            enableLanguageFeature(LanguageFeature.WhenGuards.name)
+            enableLanguageFeature(LanguageFeature.MultiDollarInterpolation.name)
+            enableLanguageFeature(LanguageFeature.BreakContinueInInlineLambdas.name)
+        }
+    }
 }
