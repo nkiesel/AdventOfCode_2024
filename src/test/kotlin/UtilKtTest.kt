@@ -82,6 +82,8 @@ internal class UtilKtTest {
         map shouldHaveSize 3
         map.count("a") shouldBe 2L
         map.count("d") shouldBe 0L
+
+        map.entries().sumOf { it.value } shouldBe 6
     }
 
     @Test
@@ -95,6 +97,8 @@ internal class UtilKtTest {
         map shouldHaveSize 4
         map.count("a") shouldBe 3L
         map.count("d") shouldBe 1L
+
+        map.entries().sumOf { it.value } shouldBe 10
     }
 
     @Test
@@ -105,6 +109,14 @@ internal class UtilKtTest {
         gcd(10, 10) shouldBe 10
         gcd(101, 103) shouldBe 1
         gcd(101 * 3, 103 * 6) shouldBe 3
+    }
+
+    @Test
+    fun numbers() {
+        "a3b1c4d".ints() shouldBe listOf(3, 1, 4)
+        "-1,3-".ints() shouldBe listOf(-1, 3)
+        "a3b1c4d".longs() shouldBe listOf(3L, 1L, 4L)
+        "-1,3-".longs() shouldBe listOf(-1L, 3L)
     }
 
     @Test
@@ -123,6 +135,7 @@ internal class UtilKtTest {
         val (i, a) = listOf(3, 1, 4).minMax()
         i shouldBe 1
         a shouldBe 4
+        listOf(3L, 1L, 4L, 1L, 5L, 9L).minMax() shouldBe longArrayOf(1L, 9L)
     }
 
     @Test
@@ -152,7 +165,10 @@ internal class UtilKtTest {
     @Test
     fun manhattanDistance() {
         manhattanDistance(0, 0, 2, 2) shouldBe 4
+        manhattanDistance(0L, 0L, 2L, 2L) shouldBe 4L
+        manhattanDistance(Point(0, 0), Point(2, 2)) shouldBe 4
         manhattanDistance(0, 0, 0, 2, 2, 2) shouldBe 6
+        manhattanDistance(0L, 0L, 0L, 2L, 2L, 2L) shouldBe 6L
         manhattanDistance(intArrayOf(0, 0), intArrayOf(1, 2)) shouldBe 3
         manhattanDistance(longArrayOf(0L, 0L), longArrayOf(1L, 2L)) shouldBe 3L
     }

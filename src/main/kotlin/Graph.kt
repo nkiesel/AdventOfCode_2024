@@ -86,10 +86,10 @@ fun <T> dfs(start: T, next: (T) -> Iterable<T>): Sequence<IndexedValue<T>> = wal
 fun <T> bfs(start: T, next: (T) -> Iterable<T>): Sequence<IndexedValue<T>> = walk(start, next, Walk.Breadth)
 
 // initially copied from https://github.com/ephemient/aoc2022/blob/main/kt/src/commonMain/kotlin/com/github/ephemient/aoc2022/Day12.kt
-fun <T> walk(start: T, next: (T) -> Iterable<T>, first: Walk): Sequence<IndexedValue<T>> = sequence {
+fun <T> walk(start: T, next: (T) -> Iterable<T>, walk: Walk): Sequence<IndexedValue<T>> = sequence {
     val seen = mutableSetOf(start)
     val queue = ArrayDeque(listOf(IndexedValue(0, start)))
-    val enqueue = if (first == Walk.Breadth) queue::add else queue::addFirst
+    val enqueue = if (walk == Walk.Breadth) queue::add else queue::addFirst
     while (queue.isNotEmpty()) {
         val a = queue.removeFirst()
         yield(a)
