@@ -395,7 +395,6 @@ fun showPng(area: CharArea, tiles: TILES) {
     toPng(area, tiles, out)
     val pngViewer = System.getenv("PNG_VIEWER") ?: with(System.getProperty("os.name")) {
         when {
-            startsWith("Linux") -> "loupe"
             startsWith("Mac") -> "open"
             startsWith("Windows") -> "explorer"
             else -> "xdg-open"
