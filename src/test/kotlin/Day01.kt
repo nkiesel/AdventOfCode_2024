@@ -1,7 +1,6 @@
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import kotlin.collections.unzip
-import kotlin.math.absoluteValue
 
 class Day01 {
     private val sample = """
@@ -17,7 +16,7 @@ class Day01 {
 
     private fun one(input: List<String>): Int {
         val (left, right) = parse(input)
-        return left.sorted().zip(right.sorted()).sumOf { (l, r) -> (l - r).absoluteValue }
+        return left.sorted().zip(right.sorted()).sumOf { (l, r) -> l delta r }
     }
 
     private fun two(input: List<String>): Int {
@@ -48,4 +47,6 @@ which made the code a bit prettier.
 
 Yeah, learned something new from the other Kotlin developers: Kotlin stdlib has an `unzip` function! made the code
 even a bit more elegant.
+
+Added `delta` function to Utils.
  */
