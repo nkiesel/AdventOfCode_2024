@@ -21,7 +21,8 @@ class Day01 {
 
     private fun two(input: List<String>): Int {
         val (left, right) = parse(input)
-        return left.sumOf { l -> l * right.count { it == l } }
+        val rg = right.groupingBy { it }.eachCount()
+        return left.sumOf { l -> l * rg.getOrDefault(l, 0) }
     }
 
     @Test
@@ -49,4 +50,6 @@ Yeah, learned something new from the other Kotlin developers: Kotlin stdlib has 
 even a bit more elegant.
 
 Added `delta` function to Utils.
+
+Final optimization: use groupingBy().eachCount() to handle it a bit more efficiently.
  */
