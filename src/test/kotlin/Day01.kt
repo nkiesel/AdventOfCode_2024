@@ -19,13 +19,13 @@ class Day01 {
     }
 
     private fun one(input: List<String>): Int {
-        val data = parse(input)
-        return data.first.sorted().zip(data.second.sorted()).sumOf { (left, right) -> (left - right).absoluteValue }
+        val (left, right) = parse(input)
+        return left.sorted().zip(right.sorted()).sumOf { (l, r) -> (l - r).absoluteValue }
     }
 
     private fun two(input: List<String>): Int {
-        val data = parse(input)
-        return data.first.sumOf { left -> left * data.second.count { it == left } }
+        val (left, right) = parse(input)
+        return left.sumOf { l -> l * right.count { it == l } }
     }
 
     @Test
@@ -45,4 +45,7 @@ class Day01 {
 Welcome to AoC 2024!!!
 
 As usual day 1 is very simple. Nothing special.
+
+After implementing in TS, I changed the code from `val data = parse(input)` to `val (left, right) = parse(input)`
+which made the code a bit prettier.
  */
