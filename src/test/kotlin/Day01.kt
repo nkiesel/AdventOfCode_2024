@@ -1,5 +1,6 @@
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import kotlin.collections.unzip
 import kotlin.math.absoluteValue
 
 class Day01 {
@@ -12,11 +13,7 @@ class Day01 {
         3   3
     """.trimIndent().lines()
 
-    private fun parse(input: List<String>): Pair<List<Int>, List<Int>> {
-        val left = input.map { it.ints()[0] }
-        val right = input.map { it.ints()[1] }
-        return left to right
-    }
+    private fun parse(input: List<String>): Pair<List<Int>, List<Int>> = input.map { it.ints().let { it[0] to it[1]} }.unzip()
 
     private fun one(input: List<String>): Int {
         val (left, right) = parse(input)
@@ -48,4 +45,7 @@ As usual day 1 is very simple. Nothing special.
 
 After implementing in TS, I changed the code from `val data = parse(input)` to `val (left, right) = parse(input)`
 which made the code a bit prettier.
+
+Yeah, learned something new from the other Kotlin developers: Kotlin stdlib has an `unzip` function! made the code
+even a bit more elegant.
  */
