@@ -1,4 +1,4 @@
-import kotlin.math.absoluteValue
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -217,5 +217,5 @@ fun Collection<Int>.multiReduce(vararg transformers: (Int, Int) -> Int): List<In
 fun String.ints() = Regex("""-?\d+""").findAll(this).map { it.value.toInt() }.toList()
 fun String.longs() = Regex("""-?\d+""").findAll(this).map { it.value.toLong() }.toList()
 
-infix fun Int.delta(other: Int) = (this - other).absoluteValue
-infix fun Long.delta(other: Long) = (this - other).absoluteValue
+infix fun Int.delta(other: Int) = abs(this - other)
+infix fun Long.delta(other: Long) = abs(this - other)
