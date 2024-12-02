@@ -16,7 +16,7 @@ class Day02 {
     private fun isValid(nums: List<Int>): Boolean {
         val w = nums.windowed(2)
         val descending = w[0].let { (a, b) -> a > b }
-        return w.all { (a, b) -> a != b && (a > b) == descending && (a delta b) in 1..3 }
+        return w.all { (a, b) -> (a > b) == descending && (a delta b) in 1..3 }
     }
 
     private fun isValid2(nums: List<Int>): Boolean {
