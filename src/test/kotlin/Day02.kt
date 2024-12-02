@@ -1,5 +1,7 @@
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import kotlin.math.absoluteValue
+import kotlin.math.sign
 
 class Day02 {
     private val sample = """
@@ -14,17 +16,17 @@ class Day02 {
     private fun parse(input: List<String>) = input.map { it.ints() }
 
     private fun isValid(nums: List<Int>): Boolean {
-        val descending = nums[0] > nums[1]
-        return nums.windowed(2).all { (a, b) -> (a > b) == descending && (a delta b) in 1..3 }
+        val s = (nums[0] - nums[1]).sign
+        return nums.zipWithNext { a, b -> a - b }.all { it.sign == s && it.absoluteValue in 1..3 }
     }
 
     private fun isValid2(nums: List<Int>): Boolean {
         return isValid(nums) || nums.indices.any { isValid(nums.toMutableList().apply { removeAt(it) }) }
     }
 
-    private fun one(input: List<String>) = parse(input).count { line -> isValid(line) }
+    private fun one(input: List<String>) = parse(input).count { isValid(it) }
 
-    private fun two(input: List<String>) = parse(input).count { line -> isValid2(line) }
+    private fun two(input: List<String>) = parse(input).count { isValid2(it) }
 
     @Test
     fun testOne(input: List<String>) {
