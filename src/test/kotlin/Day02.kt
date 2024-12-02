@@ -14,9 +14,8 @@ class Day02 {
     private fun parse(input: List<String>) = input.map { it.ints() }
 
     private fun isValid(nums: List<Int>): Boolean {
-        val w = nums.windowed(2)
-        val descending = w[0].let { (a, b) -> a > b }
-        return w.all { (a, b) -> (a > b) == descending && (a delta b) in 1..3 }
+        val descending = nums[0] > nums[1]
+        return nums.windowed(2).all { (a, b) -> (a > b) == descending && (a delta b) in 1..3 }
     }
 
     private fun isValid2(nums: List<Int>): Boolean {
