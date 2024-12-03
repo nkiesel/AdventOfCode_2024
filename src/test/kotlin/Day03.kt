@@ -12,23 +12,23 @@ class Day03 {
     """.trimIndent().lines()
 
     private fun one(input: List<String>): Int {
-        return Regex("""mul\((\d{1,3}),(\d{1,3})\)""").findAll(input.joinToString(""))
-            .map { r -> r.groupValues[1].toInt() * r.groupValues[2].toInt() }.sum()
+        return Regex("""mul\((\d{1,3}),(\d{1,3})\)""")
+            .findAll(input.joinToString(""))
+            .sumOf { it.groupValues[1].toInt() * it.groupValues[2].toInt() }
     }
 
     private fun two(input: List<String>): Int {
         var enabled = true
-        var sum = 0
-        Regex("""mul\((\d{1,3}),(\d{1,3})\)|do(n't)?\(\)""").findAll(input.joinToString("")).forEach { m ->
-            if ("mul" in m.value) {
-                if (enabled) {
-                    sum += m.groupValues[1].toInt() * m.groupValues[2].toInt()
+        return Regex("""mul\((\d{1,3}),(\d{1,3})\)|do(n't)?\(\)""")
+            .findAll(input.joinToString(""))
+            .sumOf { m ->
+                if (enabled && m.value.startsWith("mul")) {
+                    m.groupValues[1].toInt() * m.groupValues[2].toInt()
+                } else {
+                    enabled = m.value == "do()"
+                    0
                 }
-            } else {
-                enabled = m.value == "do()"
             }
-        }
-        return sum
     }
 
     @Test
