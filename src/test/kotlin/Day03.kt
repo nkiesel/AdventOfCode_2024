@@ -21,26 +21,35 @@ class Day03 {
         var enabled = true
         return Regex("""mul\((\d{1,3}),(\d{1,3})\)|do(n't)?\(\)""")
             .findAll(input.joinToString(""))
-            .sumOf { m ->
-                if (enabled && m.value.startsWith("mul")) {
-                    m.groupValues[1].toInt() * m.groupValues[2].toInt()
+            .sumOf {
+                val (m, x, y) = it.groupValues
+                if (enabled && m.startsWith("mul")) {
+                    x.toInt() * y.toInt()
                 } else {
-                    enabled = m.value == "do()"
+                    enabled = m == "do()"
                     0
                 }
             }
     }
 
+    private fun p1(input: String) =
+        Regex("""mul\((\d{1,3}),(\d{1,3})\)""").findAll(input).map { it.destructured }
+            .sumOf { (a, b) -> a.toInt() * b.toInt() }
+
+    private fun p2(input: String) = input.split("do()").map { it.substringBefore("don't()") }.sumOf { p1(it) }
+
     @Test
     fun testOne(input: List<String>) {
         one(sample1) shouldBe 161
         one(input) shouldBe 173785482
+        p1(input.joinToString("")) shouldBe 173785482
     }
 
     @Test
     fun testTwo(input: List<String>) {
         two(sample2) shouldBe 88
         two(input) shouldBe 83158140
+        p2(input.joinToString()) shouldBe 83158140
     }
 }
 
@@ -49,4 +58,6 @@ class Day03 {
  * answer for part 2 was wrong because I wrote the code to handle every input line independently. Thus, I started with
  * enabled at the beginning of every line, which returned a value which was too high. I finally - after reading the
  * instructions multiple times - realized that it never talked about "sum of lines".
+ *
+ * In the Kotlin AoC Slack channel I saw the p1/p2 solution which uses the part1 solution in part 2. Very nice one-liner.
  */
