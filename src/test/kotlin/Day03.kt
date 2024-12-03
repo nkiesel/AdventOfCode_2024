@@ -7,7 +7,7 @@ class Day03 {
     """.trimIndent().lines()
 
     private val sample2 = """
-                xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))
+                xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))don't()
                 xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))
     """.trimIndent().lines()
 
@@ -39,7 +39,7 @@ class Day03 {
 
     @Test
     fun testTwo(input: List<String>) {
-        two(sample2) shouldBe 96
+        two(sample2) shouldBe 88
         two(input) shouldBe 83158140
     }
 }
