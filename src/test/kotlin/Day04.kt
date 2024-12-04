@@ -15,43 +15,49 @@ class Day04 {
         MXMXAXMASX
     """.trimIndent().lines()
 
-    private fun parse(input: List<String>) = CharArea(input)
+    private fun parse(input: List<String>): List<Set<Point>> {
+        val area = CharArea(input)
+        val allX = mutableSetOf<Point>()
+        val allM = mutableSetOf<Point>()
+        val allA = mutableSetOf<Point>()
+        val allS = mutableSetOf<Point>()
+        area.tiles().forEach {
+            when (area[it]) {
+                'X' -> allX.add(it)
+                'M' -> allM.add(it)
+                'A' -> allA.add(it)
+                'S' -> allS.add(it)
+            }
+        }
+        return listOf(allX, allM, allA, allS)
+    }
 
     private fun one(input: List<String>): Int {
-        val area = parse(input)
+        val (allX, allM, allA, allS) = parse(input)
         var count = 0
-        val xmas = mapOf(
-            'X' to mutableSetOf<Point>(),
-            'M' to mutableSetOf<Point>(),
-            'A' to mutableSetOf<Point>(),
-            'S' to mutableSetOf<Point>(),
-        )
-        val keys = xmas.keys
-        area.tiles().filter { area[it] in keys }.forEach { xmas[area[it]]!!.add(it) }
-        for (x in xmas['X']!!) {
+        for (x in allX) {
             for (d in listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)) {
                 if (
-                    x.move(d.first * 1, d.second * 1) in xmas['M']!! &&
-                    x.move(d.first * 2, d.second * 2) in xmas['A']!! &&
-                    x.move(d.first * 3, d.second * 3) in xmas['S']!!
-                    ) count++
+                    x.move(d.first * 1, d.second * 1) in allM &&
+                    x.move(d.first * 2, d.second * 2) in allA &&
+                    x.move(d.first * 3, d.second * 3) in allS
+                ) count++
             }
         }
         return count
     }
 
     private fun two(input: List<String>): Int {
-        val area = parse(input)
+        val (_, allM, allA, allS) = parse(input)
         var count = 0
-        val allA = area.tiles().filter { area[it] == 'A'}
         for (a in allA) {
             val tl = a.move(-1, -1)
             val tr = a.move(1, -1)
             val bl = a.move(-1, 1)
             val br = a.move(1, 1)
-            if (area.valid(tl) && area.valid(tr) && area.valid(bl) && area.valid(br) &&
-                (area[tl] == 'M' && area[br] == 'S' || area[tl] == 'S' && area[br] == 'M') &&
-                (area[tr] == 'M' && area[bl] == 'S' || area[tr] == 'S' && area[bl] == 'M')
+            if (
+                (tl in allM && br in allS || tl in allS && br in allM) &&
+                (tr in allM && bl in allS || tr in allS && bl in allM)
             ) {
                 count++
             }
@@ -73,5 +79,6 @@ class Day04 {
 }
 
 /**
- * This was pretty simple because of my CharArea class.
+ * This was pretty simple because of my CharArea class.  After writing in TypeScript, I rewrote the code a bit
+ * to use explicitly named sets.
  */
