@@ -9,6 +9,7 @@ data class Point(val x: Int, val y: Int) {
     }
 
     fun move(dx: Int, dy: Int) = Point(x + dx, y + dy)
+    fun move(p: Point, n: Int = 1) = Point(x + p.x * n, y + p.y * n)
 
     fun neighbors4() = listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1)
         .map { (dx, dy) -> Point(x + dx, y + dy) }

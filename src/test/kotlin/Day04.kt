@@ -34,35 +34,20 @@ class Day04 {
 
     private fun one(input: List<String>): Int {
         val (allX, allM, allA, allS) = parse(input)
-        var count = 0
-        for (x in allX) {
-            for (d in listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)) {
-                if (
-                    x.move(d.first * 1, d.second * 1) in allM &&
-                    x.move(d.first * 2, d.second * 2) in allA &&
-                    x.move(d.first * 3, d.second * 3) in allS
-                ) count++
+        return allX.sumOf { x ->
+            Point(0, 0).neighbors8().count { d ->
+                x.move(d, 1) in allM && x.move(d, 2) in allA && x.move(d, 3) in allS
             }
         }
-        return count
     }
 
     private fun two(input: List<String>): Int {
         val (_, allM, allA, allS) = parse(input)
-        var count = 0
-        for (a in allA) {
-            val tl = a.move(-1, -1)
-            val tr = a.move(1, -1)
-            val bl = a.move(-1, 1)
-            val br = a.move(1, 1)
-            if (
-                (tl in allM && br in allS || tl in allS && br in allM) &&
-                (tr in allM && bl in allS || tr in allS && bl in allM)
-            ) {
-                count++
-            }
+        return allA.count { a ->
+            val (tl, bl, tr, br) = a.neighbors8().filter { it.x != a.x && it.y != a.y }
+            (tl in allM && br in allS || tl in allS && br in allM) &&
+                    (tr in allM && bl in allS || tr in allS && bl in allM)
         }
-        return count
     }
 
     @Test
