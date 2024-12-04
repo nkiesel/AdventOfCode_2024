@@ -23,10 +23,10 @@ class Day04 {
         val allS = mutableSetOf<Point>()
         area.tiles().forEach {
             when (area[it]) {
-                'X' -> allX.add(it)
-                'M' -> allM.add(it)
-                'A' -> allA.add(it)
-                'S' -> allS.add(it)
+                'X' -> allX += it
+                'M' -> allM += it
+                'A' -> allA += it
+                'S' -> allS += it
             }
         }
         return listOf(allX, allM, allA, allS)
