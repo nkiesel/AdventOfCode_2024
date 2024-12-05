@@ -33,14 +33,13 @@ class Day05 {
         97,13,75,29,47
     """.trimIndent().lines()
 
-    lateinit var orders: List<Pair<Int, Int>>
+    lateinit var orders: List<List<Int>>
     lateinit var updates: List<List<Int>>
 
     private fun parse(input: List<String>) {
-        input.map { it.ints() }.chunkedBy(List<Int>::isEmpty).let { (o, u) ->
-            orders = o.map { Pair(it[0], it[1]) }
-            updates = u
-        }
+        val (o, u) = input.map { it.ints() }.chunkedBy(List<Int>::isEmpty)
+        orders = o
+        updates = u
     }
 
     private fun one(input: List<String>): Int {
@@ -55,7 +54,7 @@ class Day05 {
 
     private fun isValid(update: List<Int>): Boolean {
         update.forEachIndexed { i, page ->
-            val mustBeBefore = orders.filter { it.second == page }.map { it.first }.toSet()
+            val mustBeBefore = orders.filter { it[1] == page }.map { it[0] }.toSet()
             if (!update.subList(0, i).all { it in mustBeBefore }) return false
         }
         return true
@@ -65,7 +64,7 @@ class Day05 {
         val fixed = mutableListOf<Int>()
         val lastCandidates = update.toMutableSet()
         while (lastCandidates.isNotEmpty()) {
-            lastCandidates.first { orders.none { o -> o.first == it && o.second in lastCandidates } }.let {
+            lastCandidates.first { orders.none { o -> o[0] == it && o[1] in lastCandidates } }.let {
                 fixed += it
                 lastCandidates -= it
             }
