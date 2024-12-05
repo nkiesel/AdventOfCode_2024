@@ -1,9 +1,6 @@
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-typealias Order = Pair<Int, Int>
-typealias Update = List<Int>
-
 class Day05 {
     private val sample = """
         47|53
@@ -36,30 +33,27 @@ class Day05 {
         97,13,75,29,47
     """.trimIndent().lines()
 
+    lateinit var orders: List<Pair<Int, Int>>
+    lateinit var updates: List<List<Int>>
 
-    private fun parse(input: List<String>): Pair<List<Order>, List<Update>> {
-        val orders = mutableListOf<Order>()
-        val updates = mutableListOf<Update>()
-        input.forEach { line ->
-            when {
-                '|' in line -> orders += line.ints().let { Pair(it[0], it[1]) }
-                ',' in line -> updates += line.ints()
-            }
+    private fun parse(input: List<String>) {
+        input.map { it.ints() }.chunkedBy(List<Int>::isEmpty).let { (o, u) ->
+            orders = o.map { Pair(it[0], it[1]) }
+            updates = u
         }
-        return orders to updates
     }
 
     private fun one(input: List<String>): Int {
-        val (orders, updates) = parse(input)
-        return updates.filter { isValid(it, orders) }.sumOf { it[it.size / 2] }
+        parse(input)
+        return updates.filter { isValid(it) }.sumOf { it[it.size / 2] }
     }
 
     private fun two(input: List<String>): Int {
-        val (orders, updates) = parse(input)
-        return updates.filterNot { isValid(it, orders) }.map { fixed(it, orders) }.sumOf { it[it.size / 2] }
+        parse(input)
+        return updates.filterNot { isValid(it) }.map { fixed(it) }.sumOf { it[it.size / 2] }
     }
 
-    private fun isValid(update: Update, orders: List<Order>): Boolean {
+    private fun isValid(update: List<Int>): Boolean {
         update.forEachIndexed { i, page ->
             val mustBeBefore = orders.filter { it.second == page }.map { it.first }.toSet()
             if (!update.subList(0, i).all { it in mustBeBefore }) return false
@@ -67,7 +61,7 @@ class Day05 {
         return true
     }
 
-    private fun fixed(update: Update, orders: List<Order>): List<Int> {
+    private fun fixed(update: List<Int>): List<Int> {
         val fixed = mutableListOf<Int>()
         val lastCandidates = update.toMutableSet()
         while (lastCandidates.isNotEmpty()) {
