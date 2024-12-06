@@ -1,5 +1,6 @@
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import java.lang.invoke.MethodHandles.loop
 
 class Day06 {
     private val sample = """
@@ -37,39 +38,35 @@ class Day06 {
     }
 
     private fun path(area: CharArea, start: Point): Set<Point> {
-        val visited = mutableSetOf<Point>()
         var pos = start
-        visited += pos
+        val visited = mutableSetOf(pos)
         var dir = Direction.N
-        var next = pos.move(dir)
-        while (area.valid(next)) {
+        while (true) {
+            val next = pos.move(dir)
+            if (!area.valid(next)) return visited
             if (area[next] == '#') {
                 dir = dir.right()
-                next = pos.move(dir)
+            } else {
+                pos = next
+                visited += pos
             }
-            pos = next
-            visited += pos
-            next = pos.move(dir)
         }
-        return visited
     }
 
     private fun loop(area: CharArea, start: Point): Boolean {
-        val visited = mutableSetOf<Pair<Point, Direction>>()
         var pos = start
         var dir = Direction.N
-        visited += pos to dir
-        var next = pos.move(dir)
-        while (area.valid(next)) {
-            while (area[next] == '#') {
+        val visited = mutableSetOf(pos to dir)
+        while (true) {
+            val next = pos.move(dir)
+            if (!area.valid(next)) return false
+            if (area[next] == '#') {
                 dir = dir.right()
-                next = pos.move(dir)
+            } else {
+                pos = next
+                if (!visited.add(pos to dir)) return true
             }
-            pos = next
-            if (!visited.add(pos to dir)) return true
-            next = pos.move(dir)
         }
-        return false
     }
 
     @Test
@@ -95,4 +92,6 @@ class Day06 {
  * The other point that I got wrong first for part 2 was to assume I would have to test all empty cells as candidates.
  * But then I quickly realized that I only had to consider the cells from the path.  I thus refactored the part 1
  * solution to return the path instead of just the path length so that I could use that for part 2.
+ *
+ * After seeing some other solutions, some more cleanup to my code.
  */
