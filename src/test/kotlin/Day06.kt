@@ -19,50 +19,30 @@ class Day06 {
 
     private fun one(input: List<String>): Int {
         val area = parse(input)
-        val start = area.first('^')
-        return path(area, start).size
+        return walkToExit(area, area.first('^'))?.size ?: error("loop")
     }
 
     private fun two(input: List<String>): Int {
         val area = parse(input)
         val start = area.first('^')
-        return (path(area, start) - start).count { c ->
+        return (walkToExit(area, start)!! - start).count { c ->
             area[c] = '#'
-            loop(area, start).also {
-                area[start] = '^'
-                area[c] = '.'
-            }
+            (walkToExit(area, start) == null).also { area[c] = '.' }
         }
     }
 
-    private fun path(area: CharArea, start: Point): Set<Point> {
-        var pos = start
-        val visited = mutableSetOf(pos)
-        var dir = Direction.N
-        while (true) {
-            val next = pos.move(dir)
-            if (!area.valid(next)) return visited
-            if (area[next] == '#') {
-                dir = dir.right()
-            } else {
-                pos = next
-                visited += pos
-            }
-        }
-    }
-
-    private fun loop(area: CharArea, start: Point): Boolean {
+    private fun walkToExit(area: CharArea, start: Point): Set<Point>? {
         var pos = start
         var dir = Direction.N
         val visited = mutableSetOf(pos to dir)
         while (true) {
             val next = pos.move(dir)
-            if (!area.valid(next)) return false
+            if (!area.valid(next)) return visited.map { it.first }.toSet()
             if (area[next] == '#') {
-                dir = dir.right()
+                dir = dir.turnRight()
             } else {
                 pos = next
-                if (!visited.add(pos to dir)) return true
+                if (!visited.add(pos to dir)) return null
             }
         }
     }
