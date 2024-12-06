@@ -49,7 +49,6 @@ class Day06 {
             }
             pos = next
             visited += pos
-            area[pos] = 'X'
             next = pos.move(dir)
         }
         return visited
