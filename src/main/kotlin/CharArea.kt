@@ -1,4 +1,27 @@
-enum class Direction { N, S, E, W }
+enum class Direction {
+    N, S, E, W;
+
+    fun right() = when (this) {
+        Direction.N -> Direction.E
+        Direction.E -> Direction.S
+        Direction.S -> Direction.W
+        Direction.W -> Direction.N
+    }
+
+    fun left() = when (this) {
+        Direction.N -> Direction.W
+        Direction.E -> Direction.N
+        Direction.S -> Direction.E
+        Direction.W -> Direction.S
+    }
+
+    fun reverse() = when (this) {
+        Direction.N -> Direction.S
+        Direction.E -> Direction.W
+        Direction.S -> Direction.N
+        Direction.W -> Direction.E
+    }
+}
 
 data class Point(val x: Int, val y: Int) {
     fun move(d: Direction, n: Int = 1) = when (d) {
