@@ -1,6 +1,5 @@
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import java.lang.invoke.MethodHandles.loop
 
 class Day06 {
     private val sample = """
@@ -27,8 +26,7 @@ class Day06 {
     private fun two(input: List<String>): Int {
         val area = parse(input)
         val start = area.first('^')
-        val candidates = path(area, start) - start
-        return candidates.count { c ->
+        return (path(area, start) - start).count { c ->
             area[c] = '#'
             loop(area, start).also {
                 area[start] = '^'
