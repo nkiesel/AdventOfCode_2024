@@ -37,7 +37,7 @@ class Day06 {
         val visited = mutableSetOf(pos to dir)
         while (true) {
             val next = pos.move(dir)
-            if (!area.valid(next)) return visited.map { it.first }.toSet()
+            if (next !in area) return visited.map { it.first }.toSet()
             if (area[next] == '#') {
                 dir = dir.turnRight()
             } else {

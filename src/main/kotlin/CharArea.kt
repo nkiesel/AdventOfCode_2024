@@ -62,6 +62,8 @@ class CharArea(private val area: Array<CharArray>) {
 
     fun valid(p: Point) = valid(p.x, p.y)
 
+    operator fun contains(p: Point) = valid(p)
+
     operator fun set(x: Int, y: Int, c: Char) {
         if (valid(x, y)) area[y][x] = c
     }
@@ -143,6 +145,4 @@ class CharArea(private val area: Array<CharArray>) {
     override fun equals(other: Any?): Boolean {
         return other is CharArea && toString() == other.toString()
     }
-
-    operator fun contains(p: Point) = p.x in xRange && p.y in yRange
 }
