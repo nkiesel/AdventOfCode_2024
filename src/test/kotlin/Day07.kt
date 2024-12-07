@@ -16,28 +16,21 @@ class Day07 {
 
     private fun parse(input: List<String>) = input.map { it.longs() }
 
-    private fun one(input: List<String>): Long {
-        return parse(input).filter { line -> valid1(line.first(), line.drop(1)) }.sumOf { line -> line.first() }
-    }
+    private fun one(input: List<String>): Long = three(input, true)
 
-    private fun list(a: Long, b: List<Long>) = b.toMutableList().apply { add(0, a) }
+    private fun two(input: List<String>): Long = three(input, false)
 
-    private fun valid1(r: Long, n: List<Long>): Boolean {
-        if (n.size == 1) return r == n.first()
-        val (a, b) = n
-        val tail = n.drop(2)
-        return valid1(r, list(a + b, tail)) || valid1(r, list(a * b, tail))
-    }
+    private fun three(input: List<String>, part1: Boolean): Long =
+        parse(input).filter { line -> valid(line.first(), line.drop(1), part1) }.sumOf { line -> line.first() }
 
-    private fun two(input: List<String>): Long {
-        return parse(input).filter { line -> valid2(line.first(), line.drop(1)) }.sumOf { line -> line.first() }
-    }
-
-    private fun valid2(r: Long, n: List<Long>): Boolean {
-        if (n.size == 1) return r == n.first()
-        val (a, b) = n
-        val tail = n.drop(2)
-        return valid2(r, list(a + b, tail)) || valid2(r, list(a * b, tail)) || valid2(r, list("$a$b".toLong(), tail))
+    private fun valid(r: Long, n: List<Long>, part1: Boolean): Boolean {
+        val a = n[0]
+        if (n.size == 1) return r == a
+        if (a > r) return false
+        val b = n[1]
+        val heads = if (part1) listOf(a + b, a * b) else listOf(a + b, a * b, "$a$b".toLong())
+        val tail = n.drop(1).toMutableList()
+        return heads.any { valid(r, tail.apply { tail[0] = it }, part1) }
     }
 
     @Test
@@ -56,4 +49,7 @@ class Day07 {
 /*
 This was pretty simple. I first thought I would have to use a tree walk, but the simple recursive solution was
 working properly. Only other issue was that I first used Int instead of Long.
- */
+
+This could be further optimized by passing the index of the list of values from where to start working on instead of
+creating copies of the list, but code runs in a second so no need to make it more complicated.
+*/
