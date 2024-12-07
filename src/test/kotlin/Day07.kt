@@ -21,7 +21,7 @@ class Day07 {
     private fun two(input: List<String>): Long = three(input, false)
 
     private fun three(input: List<String>, part1: Boolean): Long =
-        parse(input).filter { line -> valid(line.first(), line.drop(1), part1) }.sumOf { line -> line.first() }
+        parse(input).filter { valid(it.first(), it.drop(1), part1) }.sumOf { it.first() }
 
     private fun valid(r: Long, n: List<Long>, part1: Boolean): Boolean {
         val a = n[0]
