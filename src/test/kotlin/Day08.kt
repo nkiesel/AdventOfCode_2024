@@ -32,30 +32,27 @@ class Day08 {
 
     private fun parse(input: List<String>) = CharArea(input)
 
-    private fun one(input: List<String>): Int {
+    private fun one(input: List<String>): Int = three(input, ::antidotes1)
+
+    private fun two(input: List<String>): Int = three(input, ::antidotes2)
+
+    private fun three(input: List<String>, antidotes: (CharArea, List<Point>) -> Set<Point>): Int {
         val area = parse(input)
-        val antennas = area.tiles { it != '.' }.groupBy { point -> area[point] }
-        return antennas.flatMapTo(HashSet()) { antidotes1(it.value) }.filter { it in area }.size
+        val antennas = area.tiles { it != '.' }.groupBy { area[it] }
+        return antennas.flatMapTo(HashSet()) { antidotes(area, it.value) }.size
     }
 
-    private fun antidotes1(points: List<Point>): List<Point> {
-        val nk1 = buildList {
+    private fun antidotes1(area: CharArea, points: List<Point>): Set<Point> {
+        return buildSet {
             points.forEachIndexed { index, a ->
                 points.subList(index + 1, points.size).forEach { b ->
                     val dx = a.x - b.x
                     val dy = a.y - b.y
-                    add(a.move(dx, dy))
-                    add(b.move(-dx, -dy))
+                    a.move(dx, dy).let { if (it in area) add(it) }
+                    b.move(-dx, -dy).let { if (it in area) add(it) }
                 }
             }
         }
-        return nk1
-    }
-
-    private fun two(input: List<String>): Int {
-        val area = parse(input)
-        val antennas = area.tiles { it != '.' }.groupBy { point -> area[point] }
-        return antennas.flatMapTo(HashSet()) { antidotes2(area, it.value) }.size
     }
 
     private fun antidotes2(area: CharArea, points: List<Point>): Set<Point> {
