@@ -40,6 +40,8 @@ data class Point(val x: Int, val y: Int) {
 
     fun neighbors8() = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
         .map { (dx, dy) -> Point(x + dx, y + dy) }
+
+    operator fun minus(other: Point) = Point(x - other.x, y - other.y)
 }
 
 class CharArea(private val area: Array<CharArray>) {
@@ -76,10 +78,12 @@ class CharArea(private val area: Array<CharArray>) {
         set(p.x, p.y, c)
     }
 
-    fun tiles(): Sequence<Point> = sequence {
+    fun tiles(filter: ((Char) -> Boolean)? = null): Sequence<Point> = sequence {
         for (x in xRange) {
             for (y in yRange) {
-                yield(Point(x, y))
+                if (filter == null || filter(get(x, y))) {
+                    yield(Point(x, y))
+                }
             }
         }
     }
