@@ -19,7 +19,7 @@ class Day09 {
             if (free > avail) break
             blocks[free] = blocks[avail].also { blocks[avail] = blocks[free] }
         }
-        return blocks.filter { it != -1 }.foldIndexed(0L) { v, s, i -> s + v * i }
+        return blocks.filter { it != -1 }.foldIndexed(0L) { idx, sum, v -> sum + idx * v }
     }
 
     private fun two(input: List<String>): Long {
