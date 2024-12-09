@@ -24,30 +24,24 @@ class Day09 {
 
     private fun two(input: List<String>): Long {
         val blocks = parse(input).toMutableList()
-        var moveable = blocks.indexOfLast { it.id != -1 }
         while (true) {
+            val moveable = blocks.indexOfLast { it.id != -1 && it.moveable }
+            if (moveable == -1) break
             val b = blocks[moveable]
             b.moveable = false
             val free = blocks.indexOfFirst { it.id == -1 && it.length >= b.length }
             if (free != -1 && free < moveable) {
-                val fl = blocks[free].length
+                val delta = blocks[free].length - b.length
                 blocks[free] = b
                 blocks[moveable] = Block(-1, b.length)
-                if (b.length != fl) {
-                    blocks.add(free + 1, Block(-1, fl - b.length))
-                }
+                if (delta != 0) blocks.add(free + 1, Block(-1, delta))
             }
-            moveable = blocks.indexOfLast { it.id != -1 && it.moveable }
-            if (moveable == -1) break
         }
         var sum = 0L
         var i = 0
         blocks.forEach { b ->
-            if (b.id == -1) {
-                i += b.length
-            } else {
-                repeat(b.length) { sum += b.id * i++ }
-            }
+            val id = if (b.id == -1) 0 else b.id
+            repeat(b.length) { sum += id * i++ }
         }
         return sum
     }
