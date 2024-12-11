@@ -14,12 +14,7 @@ class Day11 {
                     val ss = s.toString()
                     when {
                         s == 0L -> add(1L)
-                        ss.length % 2L == 0L -> {
-                            val (l, r) = ss.chunked(ss.length / 2)
-                            add(l.toLong())
-                            add(r.toLong())
-                        }
-
+                        ss.length % 2 == 0 -> ss.chunked(ss.length / 2).forEach { add(it.toLong()) }
                         else -> add(s * 2024L)
                     }
                 }
@@ -33,24 +28,19 @@ class Day11 {
         parse(input).groupingBy { it }.eachCount().forEach { countMap.inc(it.key, it.value.toLong()) }
         repeat(rep) {
             val next = CountingMap<Long>()
-            countMap.entries.forEach { stone ->
-                val s = stone.key
-                val count = stone.value.value
+            countMap.entries.forEach { (s, c) ->
+                val count = c.value
                 val ss = s.toString()
+                val sl = ss.length
                 when {
                     s == 0L -> next.inc(1L, count)
-                    ss.length % 2L == 0L -> {
-                        val (l, r) = ss.chunked(ss.length / 2)
-                        next.inc(l.toLong(), count)
-                        next.inc(r.toLong(), count)
-                    }
-
+                    sl % 2 == 0 -> ss.chunked(sl / 2).forEach { next.inc(it.toLong(), count) }
                     else -> next.inc(s * 2024L, count)
                 }
             }
             countMap = next
         }
-        return countMap.entries().sumOf { it.value }
+        return countMap.values().sum()
     }
 
     @Test

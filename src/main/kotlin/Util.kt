@@ -99,6 +99,10 @@ class CountingMap<T>(
 
     fun entries() = m.mapValues { it.value.value }.entries
 
+    fun keys() = m.keys
+
+    fun values() = m.values.map { it.value }
+
     override fun toString(): String {
         return entries.joinToString(", ", prefix = "[", postfix = "]") { (key, count) -> "$key: ${count.value}" }
     }
