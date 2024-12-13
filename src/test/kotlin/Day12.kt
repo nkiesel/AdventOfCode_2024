@@ -80,14 +80,8 @@ class Day12 {
         var sides = 0
         fun outside(p: Point, d: Direction) = p.move(d) !in region
         region.forEach { p ->
-            val n = outside(p, N)
-            val ne = outside(p, NE)
-            val e = outside(p, E)
-            val se = outside(p, SE)
-            val s = outside(p, S)
-            val sw = outside(p, SW)
-            val w = outside(p, W)
-            val nw = outside(p, NW)
+            val (n, e, s, w) = listOf(N, E, S, W).map { outside(p, it) }
+            val (ne, se, sw, nw) = listOf(NE, SE, SW, NW).map { outside(p, it) }
             if (n && ne && e || !n && ne && !e || n && !ne && e) sides++
             if (n && nw && w || !n && nw && !w || n && !nw && w) sides++
             if (s && se && e || !s && se && !e || s && !se && e) sides++
