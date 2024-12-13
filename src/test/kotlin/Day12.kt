@@ -77,17 +77,13 @@ class Day12 {
     }
 
     private fun sides2(area: CharArea, c: Char, region: Set<Point>): Int {
-        var sides = 0
         fun outside(p: Point, d: Direction) = p.move(d) !in region
-        region.forEach { p ->
+        fun corner(a: Boolean, ab: Boolean, b: Boolean) = if (a && ab && b || !a && ab && !b || a && !ab && b) 1 else 0
+        return region.sumOf { p ->
             val (n, e, s, w) = listOf(N, E, S, W).map { outside(p, it) }
             val (ne, se, sw, nw) = listOf(NE, SE, SW, NW).map { outside(p, it) }
-            if (n && ne && e || !n && ne && !e || n && !ne && e) sides++
-            if (n && nw && w || !n && nw && !w || n && !nw && w) sides++
-            if (s && se && e || !s && se && !e || s && !se && e) sides++
-            if (s && sw && w || !s && sw && !w || s && !sw && w) sides++
+            corner(n, ne, e) + corner(n, nw, w) + corner(s, se, e) + corner(s, sw, w)
         }
-        return sides
     }
 
     @Test
