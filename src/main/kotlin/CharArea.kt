@@ -1,34 +1,50 @@
 enum class Direction {
-    N, S, E, W;
+    N, NE, E, SE, S, SW, W, NW;
 
     fun turnRight() = when (this) {
         N -> E
+        NE -> SE
         E -> S
+        SE -> SW
         S -> W
+        SW -> NW
         W -> N
+        NW -> NE
     }
 
     fun turnLeft() = when (this) {
         N -> W
+        NE -> NW
         E -> N
+        SE -> NE
         S -> E
+        SW -> SE
         W -> S
+        NW -> SW
     }
 
     fun reverse() = when (this) {
         N -> S
+        NE -> SW
         E -> W
+        SE -> NW
         S -> N
+        SW -> NE
         W -> E
+        NW -> SE
     }
 }
 
 data class Point(val x: Int, val y: Int) {
     fun move(d: Direction, n: Int = 1) = when (d) {
         Direction.N -> Point(x, y - n)
-        Direction.S -> Point(x, y + n)
+        Direction.NE -> Point(x + n, y - n)
         Direction.E -> Point(x + n, y)
+        Direction.SE -> Point(x + n, y + n)
+        Direction.S -> Point(x, y + n)
+        Direction.SW -> Point(x - n, y + n)
         Direction.W -> Point(x - n, y)
+        Direction.NW -> Point(x - n, y - n)
     }
 
     fun move(dx: Int, dy: Int) = Point(x + dx, y + dy)
