@@ -27,18 +27,8 @@ class Day14 {
     private fun one(input: List<String>, wx: Int, wy: Int): Long {
         val robots = parse(input)
         repeat(100) {
-            robots.forEach { robot ->
-                robot.p = robot.p.move(robot.v)
-                if (robot.p.x < 0) {
-                    robot.p = robot.p.move(wx, 0)
-                } else if (robot.p.x >= wx) {
-                    robot.p = robot.p.move(-wx, 0)
-                }
-                if (robot.p.y < 0) {
-                    robot.p = robot.p.move(0, wy)
-                } else if (robot.p.y >= wy) {
-                    robot.p = robot.p.move(0, -wy)
-                }
+            robots.forEach {
+                it.p = Point((it.p.x + it.v.x + wx) % wx, (it.p.y + it.v.y + wy) % wy)
             }
         }
         val count = CountingMap<Int>()
@@ -61,19 +51,9 @@ class Day14 {
         while (true) {
             seconds++
             val pos = mutableSetOf<Point>()
-            robots.forEach { robot ->
-                robot.p = robot.p.move(robot.v)
-                if (robot.p.x < 0) {
-                    robot.p = robot.p.move(wx, 0)
-                } else if (robot.p.x >= wx) {
-                    robot.p = robot.p.move(-wx, 0)
-                }
-                if (robot.p.y < 0) {
-                    robot.p = robot.p.move(0, wy)
-                } else if (robot.p.y >= wy) {
-                    robot.p = robot.p.move(0, -wy)
-                }
-                pos += robot.p
+            robots.forEach {
+                it.p = Point((it.p.x + it.v.x + wx) % wx, (it.p.y + it.v.y + wy) % wy)
+                pos += it.p
             }
             if (robots.size == pos.size) {
                 val area = CharArea(wx, wy, ' ')
