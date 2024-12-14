@@ -27,8 +27,8 @@ class Day14 {
     private fun one(input: List<String>, wx: Int, wy: Int): Long {
         val robots = parse(input)
         repeat(100) {
-            robots.forEach {
-                it.p = Point((it.p.x + it.v.x + wx) % wx, (it.p.y + it.v.y + wy) % wy)
+            robots.forEach { r ->
+                r.p = Point((r.p.x + r.v.x + wx) % wx, (r.p.y + r.v.y + wy) % wy)
             }
         }
         val count = CountingMap<Int>()
@@ -51,9 +51,9 @@ class Day14 {
         while (true) {
             seconds++
             val pos = mutableSetOf<Point>()
-            robots.forEach {
-                it.p = Point((it.p.x + it.v.x + wx) % wx, (it.p.y + it.v.y + wy) % wy)
-                pos += it.p
+            robots.forEach { r ->
+                r.p = Point((r.p.x + r.v.x + wx) % wx, (r.p.y + r.v.y + wy) % wy)
+                pos += r.p
             }
             if (robots.size == pos.size) {
                 val area = CharArea(wx, wy, ' ')
