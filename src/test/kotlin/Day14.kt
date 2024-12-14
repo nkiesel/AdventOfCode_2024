@@ -32,9 +32,9 @@ class Day14 {
             }
         }
         val count = CountingMap<Int>()
-        robots.forEach { robot ->
-            val (x, y) = robot.p
-            val (bx, by) = listOf(wx / 2, wy / 2)
+        val (bx, by) = listOf(wx, wy).map { it / 2 }
+        robots.forEach { r ->
+            val (x, y) = r.p
             when {
                 x < bx && y < by -> count.inc(1)
                 x > bx && y < by -> count.inc(2)
@@ -42,7 +42,7 @@ class Day14 {
                 x > bx && y > by -> count.inc(4)
             }
         }
-        return count.values().reduce { acc, c -> acc * c }
+        return count.values().reduce(Long::times)
     }
 
     private fun two(input: List<String>, wx: Int, wy: Int): Int {
@@ -55,7 +55,7 @@ class Day14 {
                 r.p = Point((r.p.x + r.v.x + wx) % wx, (r.p.y + r.v.y + wy) % wy)
                 pos += r.p
             }
-            if (robots.size == pos.size) {
+            if (robots.any { filledRegion(it.p, pos) }) {
                 val area = CharArea(wx, wy, ' ')
                 robots.forEach { robot ->
                     area[robot.p] = '#'
@@ -64,6 +64,15 @@ class Day14 {
                 return seconds
             }
         }
+    }
+
+    private fun filledRegion(p: Point, pos: Set<Point>): Boolean {
+        for (dx in 0..3) {
+            for (dy in 0..3) {
+                if (p.move(dx, dy) !in pos) return false
+            }
+        }
+        return true
     }
 
     @Test
@@ -83,4 +92,7 @@ My first cheating of this year: I could not figure out how to decide that a pict
 I showed all picture where the top left and top right area was mostly empty (assuming a traditional image). But that
 never showed the correct picture.  I then saw that someone suggested to use "no overlap" as criteria, and that then
 very quickly gave the correct result.  The PNG picture is added as `Day14.png`.
- */
+
+Update: I changed the terminating criteria for part 2 to "picture must contain a dense 3x3 area or robots". That is
+actually a solution that I should have found and that while a bit slower makes much more sense than the "no overlap".
+*/

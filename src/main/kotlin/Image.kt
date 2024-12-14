@@ -397,10 +397,11 @@ fun showPng(area: CharArea, tiles: TILES) {
         when {
             startsWith("Mac") -> "open"
             startsWith("Windows") -> "explorer"
-            else -> "xdg-open"
+            else -> "loupe"
         }
     }
     ProcessBuilder(pngViewer, out.path).start().waitFor()
+    out.delete()
 }
 
 private fun toPng(area: CharArea, tiles: TILES, output: File) {
