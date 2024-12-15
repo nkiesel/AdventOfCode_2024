@@ -53,10 +53,8 @@ class Day15 {
 
     val showMoves = setOf('i', 'f')
 
-    private fun parse(input: List<String>): Pair<CharArea, String> {
-        val split = input.chunkedBy { it.isEmpty() }
-        return Pair(CharArea(split[0]), split[1].joinToString(""))
-    }
+    private fun parse(input: List<String>): Pair<CharArea, String> =
+        input.chunkedBy { it.isBlank() }.let { Pair(CharArea(it[0]), it[1].joinToString("")) }
 
     private fun one(input: List<String>): Int {
         val (area, moves) = parse(input)
@@ -83,30 +81,27 @@ class Day15 {
         return area.tiles { it == 'O' }.sumOf { it.y * 100 + it.x }
     }
 
-    private fun two(input: List<String>, expand: Boolean = true): Int {
+    private fun two(input: List<String>): Int {
         val (orig, moves) = parse(input)
-        val area: CharArea
-        if (expand) {
-            area = CharArea((orig.xRange.endInclusive + 1) * 2, orig.yRange.endInclusive + 1, '.')
-            orig.tiles { it != '.' }.forEach { t ->
-                when (orig[t]) {
-                    '#' -> {
-                        area[t.x * 2, t.y] = '#'
-                        area[t.x * 2 + 1, t.y] = '#'
-                    }
+        val area = CharArea((orig.xRange.endInclusive + 1) * 2, orig.yRange.endInclusive + 1, '.')
+        orig.tiles { it != '.' }.forEach { t ->
+            val x = t.x * 2
+            val y = t.y
+            when (orig[t]) {
+                '#' -> {
+                    area[x, y] = '#'
+                    area[x + 1, y] = '#'
+                }
 
-                    'O' -> {
-                        area[t.x * 2, t.y] = '['
-                        area[t.x * 2 + 1, t.y] = ']'
-                    }
+                'O' -> {
+                    area[x, y] = '['
+                    area[x + 1, y] = ']'
+                }
 
-                    '@' -> {
-                        area[t.x * 2, t.y] = '@'
-                    }
+                '@' -> {
+                    area[x, y] = '@'
                 }
             }
-        } else {
-            area = orig
         }
         var robot = area.first('@')
         area[robot] = '.'
