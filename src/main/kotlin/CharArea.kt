@@ -33,6 +33,16 @@ enum class Direction {
         W -> E
         NW -> SE
     }
+
+    companion object {
+        fun from(char: Char) = when (char) {
+            '^' -> N
+            '>' -> E
+            'v' -> S
+            '<' -> W
+            else -> error("Char '$char' cannot be converted to a Direction")
+        }
+    }
 }
 
 data class Point(val x: Int, val y: Int) {

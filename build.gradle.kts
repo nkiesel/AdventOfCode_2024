@@ -23,7 +23,7 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
     minHeapSize = "1g"
-    maxHeapSize = "10g"
+    maxHeapSize = "30g"
     testLogging.showStandardStreams = true
     filter {
         setIncludePatterns("*Test", "Day*")
