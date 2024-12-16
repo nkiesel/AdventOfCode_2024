@@ -366,7 +366,7 @@ private val digitTiles = mapOf(
         """,
 ).mapValues { toBufferedImage(it.key, it.value) }
 
-enum class TILES {
+enum class Tiles {
     BASE, PATH, DIGIT
 }
 
@@ -390,7 +390,7 @@ private fun toBufferedImage(char: Char, data: String): BufferedImage {
     return charImage
 }
 
-fun showPng(area: CharArea, tiles: TILES) {
+fun showPng(area: CharArea, tiles: Tiles) {
     val out = createTempFile(suffix = ".png").toFile()
     toPng(area, tiles, out)
     val pngViewer = System.getenv("PNG_VIEWER") ?: with(System.getProperty("os.name")) {
@@ -404,7 +404,7 @@ fun showPng(area: CharArea, tiles: TILES) {
     out.delete()
 }
 
-private fun toPng(area: CharArea, tiles: TILES, output: File) {
+private fun toPng(area: CharArea, tiles: Tiles, output: File) {
     val image = BufferedImage(
         (area.xRange.endInclusive + 1) * tileSize,
         (area.yRange.endInclusive + 1) * tileSize,
@@ -413,9 +413,9 @@ private fun toPng(area: CharArea, tiles: TILES, output: File) {
     val graphics = image.graphics
 
     val t = when (tiles) {
-        TILES.BASE -> baseTiles
-        TILES.PATH -> baseTiles + pathTiles
-        TILES.DIGIT -> baseTiles + digitTiles
+        Tiles.BASE -> baseTiles
+        Tiles.PATH -> baseTiles + pathTiles
+        Tiles.DIGIT -> baseTiles + digitTiles
     }
     area.tiles().forEach { p ->
         t[area[p]]?.let { graphics.drawImage(it, p.x * tileSize, p.y * tileSize, null) }

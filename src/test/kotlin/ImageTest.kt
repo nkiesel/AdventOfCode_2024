@@ -34,7 +34,7 @@ class ImageTest {
                 ....FJL-7.||.||||...
                 ....L---J.LJ.LJLJ...
                 """
-        ).png(TILES.PATH)
+        ).png(Tiles.PATH)
     }
 
     @Test
@@ -52,7 +52,7 @@ class ImageTest {
                 L.L7LFJ|||||FJL7||LJ
                 L7JLJL-JLJLJL--JLJ.L
                 """
-        ).png(TILES.PATH)
+        ).png(Tiles.PATH)
     }
 
     @Test
@@ -65,6 +65,6 @@ class ImageTest {
                 ..8.9.0..
                 .........
                 """
-        ).png(TILES.DIGIT)
+        ).png(Tiles.DIGIT)
     }
 }

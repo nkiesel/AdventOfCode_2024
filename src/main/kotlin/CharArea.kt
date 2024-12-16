@@ -1,5 +1,3 @@
-import kotlin.math.absoluteValue
-
 enum class Direction {
     N, NE, E, SE, S, SW, W, NW;
 
@@ -156,7 +154,7 @@ class CharArea(private val area: Array<CharArray>) {
         area.forEach { println(it) }
     }
 
-    fun png(tiles: TILES = TILES.PATH) {
+    fun png(tiles: Tiles = Tiles.BASE) {
         showPng(this, tiles)
     }
 
