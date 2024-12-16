@@ -1,4 +1,3 @@
-import Direction.*
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -43,78 +42,40 @@ class Day16 {
 
     private fun parse(input: List<String>) = CharArea(input)
 
-    private data class Step1(val p: Point, val d: Direction, val cost: Int)
+    private fun one(input: List<String>) = three(input).first().cost
 
-    private fun one(input: List<String>): Int {
+    private fun two(input: List<String>) = three(input).flatMap { it.path }.distinct().size
+
+    private class Step(val p: Point, val d: Direction, val cost: Int, val path: List<Point>)
+
+    private fun three(input: List<String>): List<Step> {
         val area = parse(input)
         val start = area.first('S')
         val end = area.first('E')
-        val seen = mutableMapOf<Point, Int>()
-        val queue = ArrayDeque(listOf(Step1(start, E, 0)))
-        while (queue.isNotEmpty()) {
-            val s = queue.removeFirst()
-            s.p.neighbors4().filter { area[it] != '#' }.forEach { n ->
-                val d = s.p.direction(n)
-                val turns = when (s.d) {
-                    d -> 0
-                    N -> if (d == S) 2 else 1
-                    E -> if (d == W) 2 else 1
-                    S -> if (d == N) 2 else 1
-                    W -> if (d == E) 2 else 1
-                    else -> error("Unexpected direction $d")
-                }
-                if (turns < 2) {
-                    val cost = s.cost + 1 + 1000 * turns
-                    val prev = seen[n]
-                    if (prev == null || cost < prev) {
-                        seen[n] = cost
-                        if (n != end) queue.add(Step1(n, d, cost))
-                    }
-                }
-            }
-        }
-        return seen[end]!!
-    }
-
-    private data class Step2(val p: Point, val d: Direction, val cost: Int, val path: List<Point>)
-
-    private fun two(input: List<String>): Int {
-        val area = parse(input)
-        val start = area.first('S')
-        val end = area.first('E')
-        val results = mutableListOf<Step2>()
+        val reachedEnd = mutableListOf<Step>()
         val seen = mutableMapOf<Pair<Point, Direction>, Int>()
-        val queue = ArrayDeque(listOf(Step2(start, E, 0, listOf(start))))
+        val queue = ArrayDeque(listOf(Step(start, Direction.E, 0, listOf(start))))
         while (queue.isNotEmpty()) {
             val s = queue.removeFirst()
-            if (s.p == end) {
-                results.add(s)
+            val p = s.p
+            if (p == end) {
+                reachedEnd.add(s)
             } else {
-                s.p.neighbors4().filter { area[it] != '#' }.forEach { n ->
-                    val d = s.p.direction(n)
-                    val turns = when (s.d) {
-                        d -> 0
-                        N -> if (d == S) 2 else 1
-                        E -> if (d == W) 2 else 1
-                        S -> if (d == N) 2 else 1
-                        W -> if (d == E) 2 else 1
-                        else -> error("Unexpected direction $d")
-                    }
-                    if (turns < 2) {
-                        val cost = s.cost + 1 + 1000 * turns
-                        val key = n to s.d
+                val d = s.d
+                listOf(d, d.turnLeft(), d.turnRight()).map { p.move(it) to it }.filter { area[it.first] != '#' }
+                    .forEach { (n, nd) ->
+                        val cost = s.cost + if (d == nd) 1 else 1001
+                        val key = n to d
                         val prev = seen[key]
                         if (prev == null || cost <= prev) {
                             seen[key] = cost
-                            queue.add(Step2(n, d, cost, s.path + n))
+                            queue.add(Step(n, nd, cost, s.path + n))
                         }
                     }
-                }
             }
         }
-
-        val bestCost = results.minOf { it.cost }
-        return results.filter { it.cost == bestCost }.flatMap { it.path }.distinct().size
+        val bestCost = reachedEnd.minOf { it.cost }
+        return reachedEnd.filter { it.cost == bestCost }
     }
 
     @Test
@@ -137,4 +98,9 @@ The approach was pretty obvious, but I tried to use my `bfs` helper and while th
 stopped allowing to turn around, it still failed for the real input. I then open-coded that graph walk and use a
 map from Point to cost as filter criteria. For part 2, the code was very similar, but I had to use a pair of point
 and direction and let paths with equal costs proceed.
+
+Update: while converting to TypeScript, I changed the "neighbors" logic to use "turnLeft" and "turnRight" instead
+of first finding all possible neighbors and then computing their direction, which simplified the code. I then finally
+also used part2 for part1, although that adds a some overhead for part 1 because we would not have to keep track of
+the path to the point in part 1, and because we would not care from which direction a point was reached.
 */
