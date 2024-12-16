@@ -51,7 +51,7 @@ class CharAreaTest {
         area[1, 1] = '.'
         area[2, 2] = '.'
         area.tiles().filter { area[it] != ' ' } shouldHaveSize 2
-        area.filter { it != ' ' } shouldHaveSize 2
+        area.tiles { it != ' ' } shouldHaveSize 2
         area.first('.') shouldBe Point(1, 1)
 
         area.corners() shouldHaveSize 4

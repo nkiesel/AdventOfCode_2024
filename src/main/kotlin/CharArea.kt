@@ -130,8 +130,6 @@ class CharArea(private val area: Array<CharArray>) {
         return Point(x, y)
     }
 
-    fun filter(condition: (Char) -> Boolean) = tiles().filter { p -> condition(get(p)) }
-
     fun neighbors4(x: Int, y: Int): List<Point> = neighbors4(Point(x, y))
 
     fun neighbors4(p: Point): List<Point> = p.neighbors4().filter { valid(it) }
