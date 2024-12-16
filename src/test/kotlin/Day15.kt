@@ -113,12 +113,16 @@ class Day15 {
                 robot = n
             } else if (area[n] != '#') {
                 when (d) {
-                    Direction.W -> {
+                    Direction.W, Direction.E -> {
+                        val west = d == Direction.W
+                        val c = if (west) ']' else '['
+                        val dx = if (west) -2 else 2
                         var b = n
-                        while (area[b] == ']') b = b.move(-2, 0)
+                        while (area[b] == c) b = b.move(dx, 0)
                         if (area[b] == '.') {
                             area[n] = '.'
-                            for (x in (b.x)..(n.x - 1) step 2) {
+                            val rx = if (west) (b.x)..<(n.x) else (n.x + 1)..<(b.x)
+                            for (x in rx step 2) {
                                 area[x, n.y] = '['
                                 area[x + 1, n.y] = ']'
                             }
@@ -126,25 +130,14 @@ class Day15 {
                         }
                     }
 
-                    Direction.E -> {
-                        var b = n
-                        while (area[b] == '[') b = b.move(2, 0)
-                        if (area[b] == '.') {
-                            area[n] = '.'
-                            for (x in (n.x + 1)..(b.x - 1) step 2) {
-                                area[x, n.y] = '['
-                                area[x + 1, n.y] = ']'
-                            }
-                            robot = n
-                        }
-                    }
-
-                    else -> {
+                    Direction.N, Direction.S -> {
                         if (push(area, n, d, false)) {
                             push(area, n, d, true)
                             robot = n
                         }
                     }
+
+                    else -> error("Unexpected direction $d")
                 }
             }
             show(move, area, robot)
@@ -159,16 +152,14 @@ class Day15 {
         val nl = l.move(d)
         val nr = r.move(d)
         if (area[nl] == '#' || area[nr] == '#') return false
-        if ((area[nl] == '.' || push(area, nl, d, update)) && (area[nr] == '.' || push(area, nr, d, update))) {
-            if (update) {
-                area[nl] = '['
-                area[nr] = ']'
-                area[l] = '.'
-                area[r] = '.'
-            }
-            return true
+        val ok = (area[nl] == '.' || push(area, nl, d, update)) && (area[nr] == '.' || push(area, nr, d, update))
+        if (ok && update) {
+            area[nl] = '['
+            area[nr] = ']'
+            area[l] = '.'
+            area[r] = '.'
         }
-        return false
+        return ok
     }
 
     private fun show(move: Char, area: CharArea, robot: Point) {
