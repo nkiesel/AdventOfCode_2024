@@ -53,24 +53,22 @@ class Day16 {
         val queue = ArrayDeque(listOf(Step1(start, E, 0)))
         while (queue.isNotEmpty()) {
             val s = queue.removeFirst()
-            if (s.p != end) {
-                s.p.neighbors4().filter { area[it] != '#' }.forEach { n ->
-                    val d = s.p.direction(n)
-                    val turns = when (s.d) {
-                        d -> 0
-                        N -> if (d == S) 2 else 1
-                        E -> if (d == W) 2 else 1
-                        S -> if (d == N) 2 else 1
-                        W -> if (d == E) 2 else 1
-                        else -> error("Unexpected direction $d")
-                    }
-                    if (turns < 2) {
-                        val cost = s.cost + 1 + 1000 * turns
-                        val prev = seen[n]
-                        if (prev == null || prev > cost) {
-                            seen[n] = cost
-                            queue.add(Step1(n, d, cost))
-                        }
+            s.p.neighbors4().filter { area[it] != '#' }.forEach { n ->
+                val d = s.p.direction(n)
+                val turns = when (s.d) {
+                    d -> 0
+                    N -> if (d == S) 2 else 1
+                    E -> if (d == W) 2 else 1
+                    S -> if (d == N) 2 else 1
+                    W -> if (d == E) 2 else 1
+                    else -> error("Unexpected direction $d")
+                }
+                if (turns < 2) {
+                    val cost = s.cost + 1 + 1000 * turns
+                    val prev = seen[n]
+                    if (prev == null || cost < prev) {
+                        seen[n] = cost
+                        if (n != end) queue.add(Step1(n, d, cost))
                     }
                 }
             }
