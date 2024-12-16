@@ -67,4 +67,14 @@ class CharAreaTest {
         area.show()
         area.rotated().show()
     }
+
+    @Test
+    fun Points() {
+        val p1 = Point(1, 3)
+        val p2 = p1.move(Direction.E)
+        val d = p1 - p2
+        d.x shouldBe -1
+        d.y shouldBe 0
+        p1.direction(p2) shouldBe Direction.E
+    }
 }

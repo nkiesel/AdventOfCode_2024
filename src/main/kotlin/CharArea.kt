@@ -1,3 +1,5 @@
+import kotlin.math.absoluteValue
+
 enum class Direction {
     N, NE, E, SE, S, SW, W, NW;
 
@@ -68,6 +70,18 @@ data class Point(val x: Int, val y: Int) {
         .map { (dx, dy) -> Point(x + dx, y + dy) }
 
     operator fun minus(other: Point) = Point(x - other.x, y - other.y)
+
+    fun direction(other: Point): Direction {
+        require(this != other) { "Points are identical" }
+        val d = this - other
+        if (d.x == 0) {
+            return if (d.y < 0) Direction.S else Direction.N
+        }
+        if (d.y == 0) {
+            return if (d.x < 0) Direction.E else Direction.W
+        }
+        error("Only handing 4 neighbors")
+    }
 }
 
 class CharArea(private val area: Array<CharArray>) {
