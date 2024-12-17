@@ -26,8 +26,6 @@ class Day17 {
         val output = mutableListOf<Int>()
         var instruction: Int = 0
 
-        var checkOutput: Boolean = false
-
         fun reset(na: Long) {
             a = na
             b = db
@@ -49,12 +47,10 @@ class Day17 {
             return (a shr denominator.toInt()).toLong()
         }
 
-        fun execute(na: Long = da): String? {
+        fun execute(na: Long = da): String {
             reset(na)
             require(a >= 0L) { "a must be >= 0" }
-//            println("----- $a ${program.joinToString("")} -----")
             while (instruction < program.size) {
-//                println("${a.toString(8)} $output")
                 val opCode = program[instruction]
                 val operand = program[instruction + 1]
                 when (opCode) {
@@ -65,16 +61,15 @@ class Day17 {
                     4 -> b = b xor c
                     5 -> {
                         val next = (combo(operand) % 8L).toInt()
-                        if (checkOutput && (output.size >= program.size || program[output.size] != next)) return null
                         output.add(next)
-                        if (output.size > 0) println("${na.toString(8)} ${output.joinToString("")} ${program.joinToString("")}")
                     }
+
                     6 -> b = div(operand)
                     7 -> c = div(operand)
                 }
                 instruction += 2
             }
-            return if (checkOutput && output.size != program.size) null else output.joinToString(",")
+            return output.joinToString(",")
         }
     }
 
@@ -84,18 +79,29 @@ class Day17 {
 
     private fun one(input: List<String>): String {
         val computer = parse(input)
-        return computer.execute()!!
+        return computer.execute()
     }
 
     private fun two(input: List<String>): Long {
-        val computer = parse(input).apply { checkOutput = true }
-        val p = computer.program
-        val sp = p.joinToString("")
-        var sb = computer.program.reversed().joinToString("").toLong(8) * 8 + 8
-        while (computer.execute(sb) == null) {
-            sb = sb + 1
+        val computer = parse(input)
+        val ps = computer.program.joinToString(",")
+        var pi = ps.length - 1
+        var a = 0L
+        while (pi >= 0) {
+            while (true) {
+                val r = computer.execute(a)
+                if (r == ps) {
+                    return a
+                }
+                if (r == ps.substring(pi)) {
+                    pi -= 2
+                    break
+                }
+                a++
+            }
+            a *= 8
         }
-        return sb
+        error("no result")
     }
 
     @Test
@@ -107,15 +113,17 @@ class Day17 {
     @Test
     fun testTwo(input: List<String>) {
         two(sample2) shouldBe 117440L
-//        two(input) shouldBe 0L
+        two(input) shouldBe 202322348616234L
     }
 }
 
-// 2,4 -> b = a % 8
-// 1,1 -> b = b xor 1
-// 7,5 -> c = c shr b
-// 0,3 -> a = a / 8
-// 1,4 -> b = b xor 4
-// 4,5 -> b = b xor c
-// 5,5 -> output b % 8
-// 3,0 -> nothing
+/*
+Oh man, I effectively gave up on part 2 last night, but then under the shower this morning I realized that the solution
+requires A to end up as 0, because the program always loops to the first instruction otherwise. Thus, the last output
+must be the last program instruction, and the one before that must be the second-to-last instruction, and so on. And
+while observing the program execution last night, I also realized that the previous value of A was always 8 times the
+current one, and thus when finding the right value for A to produce the correct last program instruction, the value
+producing the correct second-to-last instruction is 8 times that, and so on.
+
+Part 1 was nice and simple.
+ */
