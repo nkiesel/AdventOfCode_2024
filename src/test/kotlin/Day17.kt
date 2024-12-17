@@ -41,11 +41,7 @@ class Day17 {
             else -> operand.toLong()
         }
 
-        fun div(operand: Int): Long {
-            val denominator = combo(operand)
-            require(denominator < 64) { "$denominator must be less than 64" }
-            return (a shr denominator.toInt()).toLong()
-        }
+        fun div(operand: Int) = (a shr combo(operand).toInt()).toLong()
 
         fun execute(na: Long = da): String {
             reset(na)
