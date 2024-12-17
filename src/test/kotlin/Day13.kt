@@ -21,16 +21,18 @@ class Day13 {
     """.trimIndent().lines()
 
     class Machine(val ax: Int, val ay: Int, val bx: Int, val by: Int, val px: Int, val py: Int) {
+        constructor(l: List<Int>) : this(l[0], l[1], l[2], l[3], l[4], l[5])
+
         fun bruteForce(): Int = buildSet {
-                for (na in 0..100) {
-                    val rx = px - ax * na
-                    if (rx % bx != 0) continue
-                    val nb = if (rx == 0) 0 else rx / bx
-                    if (nb > 100) continue
-                    if (ay * na + by * nb != py) continue
-                    add(na * 3 + nb)
-                }
-            }.let { if (it.isEmpty()) 0 else it.min() }
+            for (na in 0..100) {
+                val rx = px - ax * na
+                if (rx % bx != 0) continue
+                val nb = if (rx == 0) 0 else rx / bx
+                if (nb > 100) continue
+                if (ay * na + by * nb != py) continue
+                add(na * 3 + nb)
+            }
+        }.let { if (it.isEmpty()) 0 else it.min() }
 
         fun tokens(d: Long): Long {
             val pxd = px + d
@@ -41,20 +43,8 @@ class Day13 {
         }
     }
 
-    private fun parse(input: List<String>) = buildList {
-        val i = input.iterator()
-        while (true) {
-            val a = i.next().ints()
-            val b = i.next().ints()
-            val p = i.next().ints()
-            add(Machine(a[0], a[1], b[0], b[1], p[0], p[1]))
-            if (i.hasNext()) {
-                i.next()
-            } else {
-                break
-            }
-        }
-    }
+    private fun parse(input: List<String>) =
+        input.chunkedBy(String::isEmpty).map { Machine(it.joinToString("").ints()) }
 
     private fun one(input: List<String>): Long {
         return parse(input).sumOf { m -> m.tokens(0L) }

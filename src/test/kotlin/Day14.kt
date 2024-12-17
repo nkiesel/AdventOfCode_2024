@@ -60,7 +60,7 @@ class Day14 {
                 robots.forEach { robot ->
                     area[robot.p] = '#'
                 }
-                area.png(Tiles.BASE)
+                area.png()
                 return seconds
             }
         }
