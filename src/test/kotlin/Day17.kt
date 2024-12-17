@@ -59,11 +59,7 @@ class Day17 {
                     2 -> b = combo(operand) % 8L
                     3 -> if (a != 0L) instruction = operand - 2
                     4 -> b = b xor c
-                    5 -> {
-                        val next = (combo(operand) % 8L).toInt()
-                        output.add(next)
-                    }
-
+                    5 -> output.add((combo(operand) % 8L).toInt())
                     6 -> b = div(operand)
                     7 -> c = div(operand)
                 }
@@ -90,15 +86,11 @@ class Day17 {
         while (pi >= 0) {
             while (true) {
                 val r = computer.execute(a)
-                if (r == ps) {
-                    return a
-                }
-                if (r == ps.substring(pi)) {
-                    pi -= 2
-                    break
-                }
+                if (r == ps) return a
+                if (r == ps.substring(pi)) break
                 a++
             }
+            pi -= 2
             a *= 8
         }
         error("no result")

@@ -32,6 +32,7 @@ tasks.test {
 
 kotlin {
     jvmToolchain(21)
+    @Suppress("UnsafeCompilerArguments")
     sourceSets.all {
         languageSettings {
             enableLanguageFeature(LanguageFeature.WhenGuards.name)
