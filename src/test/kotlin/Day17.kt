@@ -59,7 +59,7 @@ class Day17 {
                     2 -> b = combo(operand) % 8L
                     3 -> if (a != 0L) instruction = operand - 2
                     4 -> b = b xor c
-                    5 -> output.add((combo(operand) % 8L).toInt())
+                    5 -> output += (combo(operand) % 8L).toInt()
                     6 -> b = div(operand)
                     7 -> c = div(operand)
                 }
