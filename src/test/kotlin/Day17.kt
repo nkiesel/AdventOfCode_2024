@@ -1,6 +1,5 @@
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import kotlin.math.pow
 
 class Day17 {
     private val sample1 = """
@@ -19,19 +18,19 @@ class Day17 {
         Program: 0,3,5,4,3,0
     """.trimIndent().lines()
 
-    class Computer(val da: Long, val db: Long, var dc: Long, val program: List<Int>) {
-        var a = da
-        var b = db
-        var c = dc
+    class Computer(val initialA: Long, val initialB: Long, var initialC: Long, val program: List<Int>) {
+        var a = initialA
+        var b = initialB
+        var c = initialC
         val output = mutableListOf<Int>()
         var instruction: Int = 0
 
         fun reset(na: Long) {
             a = na
-            b = db
-            c = dc
-            instruction = 0
+            b = initialB
+            c = initialC
             output.clear()
+            instruction = 0
         }
 
         fun combo(operand: Int) = when (operand) {
@@ -43,7 +42,7 @@ class Day17 {
 
         fun div(operand: Int) = (a shr combo(operand).toInt()).toLong()
 
-        fun execute(na: Long = da): String {
+        fun execute(na: Long = initialA): String {
             reset(na)
             require(a >= 0L) { "a must be >= 0" }
             while (instruction < program.size) {
