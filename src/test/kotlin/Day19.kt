@@ -1,10 +1,11 @@
+import Part.*
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import kotlin.math.sign
 
 class Day19 {
 
-    class Towels(val towels: List<String>, val designs: List<String>)
+    class Towels(val patterns: List<String>, val designs: List<String>)
 
     private val sample = """
         r, wr, b, g, bwu, rb, gb, br
@@ -24,25 +25,25 @@ class Day19 {
         return Towels(f[0].split(", "), r)
     }
 
-    private fun one(input: List<String>): Int = three(input, 1).toInt()
+    private fun one(input: List<String>): Int = three(input, ONE).toInt()
 
-    private fun two(input: List<String>): Long = three(input, 2)
+    private fun two(input: List<String>): Long = three(input, TWO)
 
-    private fun three(input: List<String>, part: Int): Long {
-        val data = parse(input)
-        return data.designs.sumOf { design ->
+    private fun three(input: List<String>, part: Part): Long {
+        val towels = parse(input)
+        return towels.designs.sumOf { design ->
             val l = design.length
             val counts = CountingMap<Int>()
             counts.inc(0)
             for (i in design.indices) {
                 val ci = counts.count(i)
                 if (ci == 0L) continue
-                for (t in data.towels) {
+                for (t in towels.patterns) {
                     val tl = i + t.length
                     if (tl <= l && design.substring(i, tl) == t) counts.inc(tl, ci)
                 }
             }
-            counts.count(l).let { if (part == 2) it else it.sign.toLong() }
+            counts.count(l).let { if (part == TWO) it else it.sign.toLong() }
         }
     }
 

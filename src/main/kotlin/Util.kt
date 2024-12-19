@@ -223,3 +223,5 @@ fun String.longs() = Regex("""-?\d+""").findAll(this).map { it.value.toLong() }.
 
 infix fun Int.delta(other: Int) = abs(this - other)
 infix fun Long.delta(other: Long) = abs(this - other)
+
+enum class Part { ONE, TWO }
