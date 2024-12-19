@@ -5,8 +5,6 @@ import kotlin.math.sign
 
 class Day19 {
 
-    class Towels(val patterns: List<String>, val designs: List<String>)
-
     private val sample = """
         r, wr, b, g, bwu, rb, gb, br
 
@@ -20,9 +18,8 @@ class Day19 {
         bbrgwb
     """.trimIndent().lines()
 
-    private fun parse(input: List<String>): Towels {
-        val (f, r) = input.chunkedBy(String::isEmpty)
-        return Towels(f[0].split(", "), r)
+    private fun parse(input: List<String>) = input.chunkedBy(String::isEmpty).let { (patterns, designs) ->
+        patterns[0].split(", ") to designs
     }
 
     private fun one(input: List<String>): Int = three(input, ONE).toInt()
@@ -30,20 +27,20 @@ class Day19 {
     private fun two(input: List<String>): Long = three(input, TWO)
 
     private fun three(input: List<String>, part: Part): Long {
-        val towels = parse(input)
-        return towels.designs.sumOf { design ->
+        val (patterns, designs) = parse(input)
+        return designs.sumOf { design ->
             val l = design.length
-            val counts = CountingMap<Int>()
-            counts.inc(0)
+            val counts = MutableList<Long>(l + 1) { 0 }
+            counts[0] = 1
             for (i in design.indices) {
-                val ci = counts.count(i)
+                val ci = counts[i]
                 if (ci == 0L) continue
-                for (t in towels.patterns) {
-                    val tl = i + t.length
-                    if (tl <= l && design.substring(i, tl) == t) counts.inc(tl, ci)
+                for (p in patterns) {
+                    val pi = i + p.length
+                    if (pi <= l && design.substring(i, pi) == p) counts[pi] += ci
                 }
             }
-            counts.count(l).let { if (part == TWO) it else it.sign.toLong() }
+            counts[l].let { if (part == TWO) it else it.sign.toLong() }
         }
     }
 
