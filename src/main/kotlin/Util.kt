@@ -89,7 +89,7 @@ class CountingMap<T>(
         l.forEach { inc(it) }
     }
 
-    class MutableLong(var value: Long)
+    data class MutableLong(var value: Long)
 
     fun inc(k: T, amount: Long = 1L) {
         m.getOrPut(k) { MutableLong(0L) }.value += amount
