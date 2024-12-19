@@ -35,9 +35,11 @@ class Day19 {
             val counts = CountingMap<Int>()
             counts.inc(0)
             for (i in design.indices) {
+                val ci = counts.count(i)
+                if (ci == 0L) continue
                 for (t in data.towels) {
                     val tl = i + t.length
-                    if (tl <= l && design.substring(i, tl) == t) counts.inc(tl, counts.count(i))
+                    if (tl <= l && design.substring(i, tl) == t) counts.inc(tl, ci)
                 }
             }
             counts.count(l).let { if (part == 2) it else it.sign.toLong() }
