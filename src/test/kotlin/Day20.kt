@@ -66,9 +66,8 @@ class Day20 {
         var cheats = mutableSetOf<Pair<Point, Point>>()
         for ((p, s) in steps.entries) {
             area.manhattan(p, picoseconds).filter { area[it] == '.' }.forEach { t ->
-                val d = steps[t]!!.c - s.c - manhattanDistance(t, p)
-                if (d >= threshold) {
-                    cheats.add(t to p)
+                if (steps[t]!!.c - s.c - manhattanDistance(t, p) >= threshold) {
+                    cheats.add(p to t)
                 }
             }
         }
