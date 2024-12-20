@@ -1,6 +1,5 @@
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import kotlin.time.measureTime
 
 class Day20 {
     private val sample = """
@@ -83,7 +82,7 @@ class Day20 {
             steps[p] = Step(i++, n)
             p = n
         } while (p != end)
-        steps[end] = Step(i++, end)
+        steps[end] = Step(i, end)
         return steps
     }
 
@@ -92,15 +91,15 @@ class Day20 {
         firstOne(sample, 20) shouldBe 5
         one(sample, 20) shouldBe 5
         one(sample, 10) shouldBe 10
-        println(measureTime { firstOne(input, 100) shouldBe 1438 })
-        println(measureTime { one(input, 100) shouldBe 1438 })
+        firstOne(input, 100) shouldBe 1438
+        one(input, 100) shouldBe 1438
     }
 
     @Test
     fun testTwo(input: List<String>) {
         two(sample, 76) shouldBe 3
-        two(sample, 72) shouldBe 29
         two(sample, 74) shouldBe 7
+        two(sample, 72) shouldBe 29
         two(input, 100) shouldBe 1026446
     }
 }
