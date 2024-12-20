@@ -1,4 +1,4 @@
-import kotlin.math.absoluteValue
+typealias Condition = (Char) -> Boolean
 
 enum class Direction {
     N, NE, E, SE, S, SW, W, NW;
@@ -102,7 +102,9 @@ class CharArea(private val area: Array<CharArray>) {
 
     fun valid(x: Int, y: Int) = x in xRange && y in yRange
 
-    fun valid(p: Point) = valid(p.x, p.y)
+    fun valid(p: Point, c: Char) = valid(p) { it == c }
+
+    fun valid(p: Point, condition: Condition? = null) = valid(p.x, p.y) && ok(p, condition)
 
     operator fun contains(p: Point) = valid(p)
 
@@ -118,21 +120,21 @@ class CharArea(private val area: Array<CharArray>) {
         set(p.x, p.y, c)
     }
 
-    fun tiles(filter: ((Char) -> Boolean)? = null): Sequence<Point> = sequence {
+    fun tiles(condition: Condition? = null): Sequence<Point> = sequence {
         for (x in xRange) {
             for (y in yRange) {
-                if (filter == null || filter(get(x, y))) {
-                    yield(Point(x, y))
-                }
+                Point(x, y).takeIf { ok(it, condition) }?.let { yield(it) }
             }
         }
     }
 
-    fun manhattan(p: Point, max: Int): Sequence<Point> = sequence {
+    fun manhattan(p: Point, max: Int, c: Char): Sequence<Point> = manhattan(p, max) { it == c }
+
+    fun manhattan(p: Point, max: Int, condition: Condition? = null): Sequence<Point> = sequence {
         for (x in (-max)..max) {
             for (y in (-max)..(max)) {
                 val n = p.move(x, y)
-                if (valid(n) && manhattanDistance(p, n) in 1..max) {
+                if (valid(n, condition) && manhattanDistance(p, n) in 1..max) {
                     yield(n)
                 }
             }
@@ -155,13 +157,19 @@ class CharArea(private val area: Array<CharArray>) {
         return Point(x, y)
     }
 
-    fun neighbors4(x: Int, y: Int): List<Point> = neighbors4(Point(x, y))
+    fun ok(p: Point, condition: Condition?): Boolean = condition == null || condition(this[p])
 
-    fun neighbors4(p: Point): List<Point> = p.neighbors4().filter { valid(it) }
+    fun neighbors4(p: Point, condition: Condition? = null): List<Point> = p.neighbors4().filter { valid(it, condition) }
 
-    fun neighbors8(p: Point): List<Point> = p.neighbors8().filter { valid(it) }
+    fun neighbors4(p: Point, c: Char): List<Point> = neighbors4(p) { it == c }
 
-    fun neighbors8(x: Int, y: Int): List<Point> = neighbors8(Point(x, y))
+    fun neighbors4(x: Int, y: Int, condition: Condition? = null): List<Point> = neighbors4(Point(x, y), condition)
+
+    fun neighbors8(p: Point, condition: Condition? = null): List<Point> = p.neighbors8().filter { valid(it, condition) }
+
+    fun neighbors8(p: Point, c: Char): List<Point> = neighbors8(p) { it == c }
+
+    fun neighbors8(x: Int, y: Int, condition: Condition? = null): List<Point> = neighbors8(Point(x, y), condition)
 
     fun show() {
         area.forEach { println(it) }

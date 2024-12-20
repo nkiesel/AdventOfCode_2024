@@ -39,10 +39,10 @@ class Day20 {
         var cheats = 0
         do {
             val s = steps[p]!!
-            p.neighbors4().filter { area[it] == '#' }.forEach { w ->
+            area.neighbors4(p, '#').forEach { w ->
                 val d = p.direction(w)
                 val n = w.move(d)
-                if (area.valid(n) && area[n] == '.') {
+                if (area.valid(n, '.')) {
                     val step = steps[n]!!
                     val saved = step.c - s.c - 2
                     if (saved >= threshold) {
@@ -64,7 +64,7 @@ class Day20 {
 
         var cheats = mutableSetOf<Pair<Point, Point>>()
         for ((p, s) in steps.entries) {
-            area.manhattan(p, picoseconds).filter { area[it] == '.' }.forEach { t ->
+            area.manhattan(p, picoseconds, '.').forEach { t ->
                 if (steps[t]!!.c - s.c - manhattanDistance(t, p) >= threshold) {
                     cheats.add(p to t)
                 }
@@ -78,7 +78,7 @@ class Day20 {
         var p = start
         var i = 0
         do {
-            val n = area.neighbors4(p).first { area[it] == '.' && it !in steps }
+            val n = area.neighbors4(p, '.').first { it !in steps }
             steps[p] = Step(i++, n)
             p = n
         } while (p != end)
