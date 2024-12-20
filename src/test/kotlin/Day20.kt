@@ -1,5 +1,6 @@
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import kotlin.time.measureTime
 
 class Day20 {
     private val sample = """
@@ -24,24 +25,19 @@ class Day20 {
 
     class Step(val c: Int, val next: Point)
 
-    private fun one(input: List<String>, threshold: Int): Int {
+    private fun one(input: List<String>, threshold: Int) = three(input, threshold, 2)
+
+    private fun two(input: List<String>, threshold: Int) = three(input, threshold, 20)
+
+    private fun firstOne(input: List<String>, threshold: Int): Int {
         val area = parse(input)
         val start = area.first('S')
         val end = area.first('E')
         area[end] = '.'
-        val steps = mutableMapOf<Point, Step>()
-        var p = start
-        var i = 0
-        do {
-            val n = p.neighbors4().first { area[it] == '.' && !steps.containsKey(it) }
-            steps[p] = Step(i++, n)
-            p = n
-        } while (p != end)
-        steps[end] = Step(i++, end)
+        val steps = steps(area, start, end)
 
-        p = start
+        var p = start
         var cheats = 0
-        val cc = CountingMap<Int>()
         do {
             val s = steps[p]!!
             p.neighbors4().filter { area[it] == '#' }.forEach { w ->
@@ -50,10 +46,7 @@ class Day20 {
                 if (area.valid(n) && area[n] == '.') {
                     val step = steps[n]!!
                     val saved = step.c - s.c - 2
-                    if (saved > 0) cc.inc(saved)
                     if (saved >= threshold) {
-//                        println(saved)
-//                        println("w: $w n: $n")
                         cheats++
                     }
                 }
@@ -63,20 +56,62 @@ class Day20 {
         return cheats
     }
 
-    private fun two(input: List<String>): Int {
-        return 0
+    private fun three(input: List<String>, threshold: Int, picoseconds: Int): Int {
+        val area = parse(input)
+        val start = area.first('S')
+        val end = area.first('E')
+        area[end] = '.'
+        val steps = steps(area, start, end)
+
+        var cheats = mutableSetOf<Pair<Point, Point>>()
+        for ((p, s) in steps.entries) {
+            area.manhattan(p, picoseconds).filter { area[it] == '.' }.forEach { t ->
+                val d = steps[t]!!.c - s.c - manhattanDistance(t, p)
+                if (d >= threshold) {
+                    cheats.add(t to p)
+                }
+            }
+        }
+        return cheats.size
+    }
+
+    private fun steps(area: CharArea, start: Point, end: Point): Map<Point, Step> {
+        val steps = mutableMapOf<Point, Step>()
+        var p = start
+        var i = 0
+        do {
+            val n = area.neighbors4(p).first { area[it] == '.' && it !in steps }
+            steps[p] = Step(i++, n)
+            p = n
+        } while (p != end)
+        steps[end] = Step(i++, end)
+        return steps
     }
 
     @Test
     fun testOne(input: List<String>) {
+        firstOne(sample, 20) shouldBe 5
         one(sample, 20) shouldBe 5
         one(sample, 10) shouldBe 10
-        one(input, 100) shouldBe 1438
+        println(measureTime { firstOne(input, 100) shouldBe 1438 })
+        println(measureTime { one(input, 100) shouldBe 1438 })
     }
 
     @Test
     fun testTwo(input: List<String>) {
-//        two(sample) shouldBe 0
-//        two(input) shouldBe 0
+        two(sample, 76) shouldBe 3
+        two(sample, 72) shouldBe 29
+        two(sample, 74) shouldBe 7
+        two(input, 100) shouldBe 1026446
     }
 }
+
+/*
+Yeah, solved day 20!!!
+The part 1 I solved pretty fast, but as usual it took a bit to solve part 2. One initial misread was the assumption
+that during the cheating, we could only step on walls.  Thus, I first computed the connected walls from the first
+wall up to a distance of 20, and then the distance of stepping into the path from all of these walls to the starting
+point. But that failed, and when I looked again at the first example of part 2 I saw that one of the cheats also
+stepped on the path.  This then lead to the actually much simpler solution to find all the points with manhattan
+distance of 20 or less.
+ */

@@ -77,4 +77,12 @@ class CharAreaTest {
         d.y shouldBe 0
         p1.direction(p2) shouldBe Direction.E
     }
+
+    @Test
+    fun `Manhattan for area`() {
+        val area = CharArea(10, 10, ' ')
+        area.manhattan(Point(0, 0), 1) shouldHaveSize 2
+        area.manhattan(Point(0, 0), 2) shouldHaveSize 5
+        area.manhattan(Point(5, 5), 2) shouldHaveSize 12
+    }
 }

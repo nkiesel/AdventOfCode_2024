@@ -1,3 +1,5 @@
+import kotlin.math.absoluteValue
+
 enum class Direction {
     N, NE, E, SE, S, SW, W, NW;
 
@@ -121,6 +123,17 @@ class CharArea(private val area: Array<CharArray>) {
             for (y in yRange) {
                 if (filter == null || filter(get(x, y))) {
                     yield(Point(x, y))
+                }
+            }
+        }
+    }
+
+    fun manhattan(p: Point, max: Int): Sequence<Point> = sequence {
+        for (x in (-max)..max) {
+            for (y in (-max)..(max)) {
+                val n = p.move(x, y)
+                if (n != p && x.absoluteValue + y.absoluteValue <= max && valid(n)) {
+                    yield(n)
                 }
             }
         }
