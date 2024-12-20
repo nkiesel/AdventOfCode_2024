@@ -132,7 +132,7 @@ class CharArea(private val area: Array<CharArray>) {
         for (x in (-max)..max) {
             for (y in (-max)..(max)) {
                 val n = p.move(x, y)
-                if (n != p && x.absoluteValue + y.absoluteValue <= max && valid(n)) {
+                if (valid(n) && manhattanDistance(p, n) in 1..max) {
                     yield(n)
                 }
             }
