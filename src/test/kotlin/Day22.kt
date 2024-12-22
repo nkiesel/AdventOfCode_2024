@@ -19,8 +19,8 @@ class Day22 {
     private fun parse(input: List<String>) = input.map { it.toLong() }
 
     private fun one(input: List<String>): Long {
-        return parse(input).sumOf { s ->
-            var n = s
+        return parse(input).sumOf { secret ->
+            var n = secret
             repeat(2000) {
                 n = ((n * 64) xor n) % 16777216L
                 n = ((n / 32) xor n) % 16777216L
@@ -53,7 +53,7 @@ class Day22 {
             val m = mem[i]
             var n = secret
             rb += (n % 10).toInt()
-            repeat(1999) { r ->
+            repeat(2000) { r ->
                 n = ((n * 64) xor n) % 16777216L
                 n = ((n / 32) xor n) % 16777216L
                 n = ((n * 2048) xor n) % 16777216L
@@ -62,7 +62,7 @@ class Day22 {
                 if (r > 3) {
                     val k = rb.key
                     keys += k
-                    if (m[k] == null) m[k] = p
+                    m.putIfAbsent(k, p)
                 }
             }
         }
