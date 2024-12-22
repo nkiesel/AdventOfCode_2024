@@ -30,19 +30,19 @@ class Day22 {
         }
     }
 
-    class RingBuffer() {
-        val l = MutableList(4) { 0 }
+    class RingBuffer(val size: Int = 4) {
+        val l = MutableList(size) { 0 }
         var i = 0
         var prev = 0
 
         operator fun plusAssign(n: Int) {
-            i = (i + 1) % 4
             l[i] = n - prev
+            i = (i + 1) % size
             prev = n
         }
 
         val key: String
-            get() = (1..4).map { l[(it + i) % 4] }.joinToString(",")
+            get() = (0..<size).map { l[(it + i) % size] }.joinToString(",")
     }
 
     private fun two(input: List<String>): Int {
