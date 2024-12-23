@@ -49,7 +49,7 @@ class Day23 {
 
         return peers.filter { it.key.startsWith("t") }.map { (t, tPeers) ->
             tPeers.mapNotNull { o ->
-                val oPeers = peers[o]!!
+                val oPeers = peers[o].orEmpty()
                 if (t in oPeers) {
                     val thirds = oPeers.intersect(tPeers)
                     if (thirds.isNotEmpty()) thirds.map { setOf(t, o, it) } else null
@@ -67,7 +67,7 @@ class Day23 {
             val next = buildSet {
                 for (c in peers.keys) {
                     for (party in parties) {
-                        if (c !in party && party.all { c in peers[it]!! }) {
+                        if (c !in party && party.all { c in peers[it].orEmpty() }) {
                             add(party + c)
                         }
                     }
@@ -87,7 +87,7 @@ class Day23 {
 
         for (party in parties) {
             for (c in peers.keys) {
-                if (c !in party && party.all { c in peers[it]!! }) {
+                if (c !in party && party.all { c in peers[it].orEmpty() }) {
                     party += c
                 }
             }
