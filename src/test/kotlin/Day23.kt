@@ -58,7 +58,7 @@ class Day23 {
         }.flatten().distinct().size
     }
 
-    private fun two(input: List<String>): String {
+    private fun twoSlow(input: List<String>): String {
         val (connections, peers) = parse(input)
 
         var parties = connections.toSet()
@@ -80,6 +80,22 @@ class Day23 {
         }
     }
 
+    private fun two(input: List<String>): String {
+        val (connections, peers) = parse(input)
+
+        var parties = connections.map { it.toMutableSet() }
+
+        for (party in parties) {
+            for (c in peers.keys) {
+                if (c !in party && party.all { c in peers[it]!! }) {
+                    party.add(c)
+                }
+            }
+        }
+
+        return parties.maxBy { it.size }.sorted().joinToString(",")
+    }
+
     @Test
     fun testOne(input: List<String>) {
         one(sample) shouldBe 7
@@ -88,11 +104,16 @@ class Day23 {
 
     @Test
     fun testTwo(input: List<String>) {
+//        two(sample) shouldBe "co,de,ka,ta"
         two(sample) shouldBe "co,de,ka,ta"
+//        two(input) shouldBe "cc,dz,ea,hj,if,it,kf,qo,sk,ug,ut,uv,wh"
         two(input) shouldBe "cc,dz,ea,hj,if,it,kf,qo,sk,ug,ut,uv,wh"
     }
 }
 
 /*
 Pretty sure there must be faster solutions for part 2 (takes about 15 secs on my laptop), but good enough for now.
+
+Update: after thinking about it a bit mre, I came up with a faster solution for part 2.  I'm still not 100% convinced
+that this solution is correct for all inputs though, so also keeping the much slower one.
 */
