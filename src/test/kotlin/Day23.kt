@@ -1,6 +1,5 @@
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import kotlin.collections.flatten
 
 class Day23 {
     private val sample = """
@@ -38,27 +37,47 @@ class Day23 {
         td-yn
     """.trimIndent().lines()
 
-    private fun parse(input: List<String>) = input.map { it.split("-").toSet() }
+    private fun parse(input: List<String>): Pair<List<Set<String>>, Map<String, Set<String>>> {
+        val connections = input.map { it.split("-").toSet() }
+        return connections to connections.flatten().distinct().associateWith { name ->
+            connections.filter { name in it }.flatten().toSet() - name
+        }
+    }
 
     private fun one(input: List<String>): Int {
-        val con = parse(input)
-        val g = con.flatten().distinct().associate { a ->
-            a to (con.filter { a in it }.flatten()).toSet() - a
-        }
+        val (_, peers) = parse(input)
 
-        return g.filter { it.key.startsWith("t") }.map { (t, u) ->
-            u.mapNotNull { o ->
-                val nk1 = g[o]!!
-                if (t in nk1) {
-                    val nk3 = nk1.intersect(u)
-                    if (nk3.isNotEmpty()) nk3.map { setOf(t, o, it) } else null
+        return peers.filter { it.key.startsWith("t") }.map { (t, tPeers) ->
+            tPeers.mapNotNull { o ->
+                val oPeers = peers[o]!!
+                if (t in oPeers) {
+                    val thirds = oPeers.intersect(tPeers)
+                    if (thirds.isNotEmpty()) thirds.map { setOf(t, o, it) } else null
                 } else null
             }.flatten().distinct()
         }.flatten().distinct().size
     }
 
-    private fun two(input: List<String>): Int {
-        return 0
+    private fun two(input: List<String>): String {
+        val (connections, peers) = parse(input)
+
+        var parties = connections.toSet()
+
+        while (true) {
+            val next = buildSet {
+                for (c in peers.keys) {
+                    for (party in parties) {
+                        if (c !in party && party.all { c in peers[it]!! }) {
+                            add(party + c)
+                        }
+                    }
+                }
+            }
+            if (next.isEmpty()) {
+                return parties.maxBy { it.size }.sorted().joinToString(",")
+            }
+            parties = next
+        }
     }
 
     @Test
@@ -69,7 +88,11 @@ class Day23 {
 
     @Test
     fun testTwo(input: List<String>) {
-//        two(sample) shouldBe 0
-//        two(input) shouldBe 0
+        two(sample) shouldBe "co,de,ka,ta"
+        two(input) shouldBe "cc,dz,ea,hj,if,it,kf,qo,sk,ug,ut,uv,wh"
     }
 }
+
+/*
+Pretty sure there must be faster solutions for part 2 (takes about 15 secs on my laptop), but good enough for now.
+*/
