@@ -88,7 +88,7 @@ class Day23 {
         for (party in parties) {
             for (c in peers.keys) {
                 if (c !in party && party.all { c in peers[it]!! }) {
-                    party.add(c)
+                    party += c
                 }
             }
         }
@@ -104,9 +104,9 @@ class Day23 {
 
     @Test
     fun testTwo(input: List<String>) {
-//        two(sample) shouldBe "co,de,ka,ta"
+//        twoSlow(sample) shouldBe "co,de,ka,ta"
         two(sample) shouldBe "co,de,ka,ta"
-//        two(input) shouldBe "cc,dz,ea,hj,if,it,kf,qo,sk,ug,ut,uv,wh"
+//        twoSlow(input) shouldBe "cc,dz,ea,hj,if,it,kf,qo,sk,ug,ut,uv,wh"
         two(input) shouldBe "cc,dz,ea,hj,if,it,kf,qo,sk,ug,ut,uv,wh"
     }
 }
